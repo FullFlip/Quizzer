@@ -19,5 +19,11 @@ public class quizcontroller {
     public String mattiEndpoint() {
         return "Matin oma endpoint ";
     }
+
+    @GetMapping("/ville")
+    @ResponseBody
+    public String villeEndpoint() {
+        return "w00000000 ";
+    }
     
 }
