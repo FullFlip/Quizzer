@@ -14,4 +14,10 @@ public class quizcontroller {
     public String testEndpoint() {
         return "This is a test endpoint!";
     }
+    @GetMapping("/matti")
+    @ResponseBody
+    public String mattiEndpoint() {
+        return "Matin oma endpoint ";
+    }
+    
 }
