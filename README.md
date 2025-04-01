@@ -1,1 +1,3 @@
 # Quizzer
+
+Mä oon omistaja
