@@ -10,3 +10,5 @@ Working as a four man team in a project called Quizzer. The project lasts 6 week
 * [Valtteri Vuokila](https://github.com/Valheri)
 * [Ville Stolt](https://github.com/Vsto99)
   
+### Backlog
+[Link to the Backlog](https://github.com/orgs/FullFlip/projects/1)
