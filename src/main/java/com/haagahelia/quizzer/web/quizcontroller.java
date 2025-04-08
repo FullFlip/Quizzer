@@ -35,13 +35,14 @@ public class quizcontroller {
         return teacherService.findOnlyTeacherData();
     }
 
+    @CrossOrigin(origins = "http://localhost:5174")
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
 
         if (id == null) {
             throw new IllegalArgumentException("Id is not provided or is invalid.");
         }
-        
+
         Teacher teacherId = teacherService.findTeacherById(id);
         if (teacherId == null) {
             throw new IllegalArgumentException("Teacher with id " + id + " could not be found");
