@@ -1,6 +1,5 @@
 package com.haagahelia.quizzer.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -17,8 +16,8 @@ public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
 
-    public Optional<Teacher> findTeacherById(Long id) {
-        return teacherRepository.findById(id);
+    public Teacher findTeacherById(Long id) {
+        return teacherRepository.findById(id).orElse(null);
     }
 
     public List<Teacher> findAllTeachers() {
@@ -34,5 +33,7 @@ public class TeacherService {
     public void addNewTeacher(Teacher teacher) {
         teacherRepository.save(teacher);
     }
+
+    
 
 }

@@ -1,6 +1,5 @@
 package com.haagahelia.quizzer.model;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -111,7 +110,9 @@ public class Quiz {
         this.questions = questions;
     }
 
-    
+    public Long getTeacherId() {
+        return this.teacher.getTeacherId();
+    }
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;

@@ -11,10 +11,6 @@ import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
 import com.haagahelia.quizzer.model.Teacher;
-import com.haagahelia.quizzer.repositories.ChoiceRepository;
-import com.haagahelia.quizzer.repositories.QuestionRepository;
-import com.haagahelia.quizzer.repositories.QuizRepository;
-import com.haagahelia.quizzer.repositories.TeacherRepository;
 import com.haagahelia.quizzer.services.TeacherService;
 
 @SpringBootApplication
