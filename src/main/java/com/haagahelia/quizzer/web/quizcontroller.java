@@ -35,7 +35,7 @@ public class quizcontroller {
         return teacherService.findOnlyTeacherData();
     }
 
-    @CrossOrigin(origins = "http://localhost:5174")
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
 
