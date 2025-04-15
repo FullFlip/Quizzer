@@ -126,7 +126,6 @@ public class quizcontroller {
         existingQuestion.setTitle(updatedQuestion.getTitle());
         existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
         existingQuestion.setChoices(updatedQuestion.getChoices());
-      //  existingQuestion.setQuiz(updatedQuestion.getQuiz());
         return questionRepository.save(existingQuestion);
     }
 
