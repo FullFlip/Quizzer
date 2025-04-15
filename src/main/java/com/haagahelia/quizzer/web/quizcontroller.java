@@ -102,16 +102,15 @@ public class quizcontroller {
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
-    @PutMapping("/questions/{id}")
-    public Question editQuestion(@PathVariable Long id, @RequestBody Question updatedQuestion) {
-        Question existingQuestion = questionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Question with id " + id + " could not be found"));
-        existingQuestion.setTitle(updatedQuestion.getTitle());
-        existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
-        existingQuestion.setChoices(updatedQuestion.getChoices());
-        existingQuestion.setQuiz(updatedQuestion.getQuiz());
-        return questionRepository.save(existingQuestion);
-    }
+@PutMapping("/questions/{id}")
+public Question editQuestion(@PathVariable Long id, @RequestBody Question updatedQuestion) {
+    Question existingQuestion = questionRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Question with id " + id + " could not be found"));
+    existingQuestion.setTitle(updatedQuestion.getTitle());
+    existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
+    existingQuestion.setChoices(updatedQuestion.getChoices());
+    return questionRepository.save(existingQuestion);
+}
 
     @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/questions/{id}")
