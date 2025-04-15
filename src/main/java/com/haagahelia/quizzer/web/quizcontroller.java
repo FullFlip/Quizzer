@@ -61,6 +61,23 @@ public class quizcontroller {
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/quizzes/{id}/questions")
+    public Quiz getQuestionsForQuiz(@PathVariable Long id) {
+
+        if (id == null) {
+            throw new IllegalArgumentException("Id is not provided or is invalid.");
+        }
+
+        Quiz quiz = (Quiz) quizRepository.findById(id).orElseThrow();
+        if (quiz == null) {
+            throw new IllegalArgumentException("Quiz with id " + id + " could not be found");
+        }
+
+        return quiz;
+    }
+
+
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
         if (quiz == null) {
@@ -109,7 +126,7 @@ public class quizcontroller {
         existingQuestion.setTitle(updatedQuestion.getTitle());
         existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
         existingQuestion.setChoices(updatedQuestion.getChoices());
-        existingQuestion.setQuiz(updatedQuestion.getQuiz());
+      //  existingQuestion.setQuiz(updatedQuestion.getQuiz());
         return questionRepository.save(existingQuestion);
     }
 

@@ -1,13 +1,15 @@
 import './App.css'
-import QuizList from './components/QuizList'
+import { Routes, Route } from 'react-router-dom';
+import QuizList from './components/QuizList';
+import Quiz from './components/Quiz';
 
-function App() {
-
+const App = () => {
   return (
-    <>
-      <QuizList />
-    </>
-  )
-}
+    <Routes>
+      <Route path="/" element={<QuizList />} />
+      <Route path="/quiz/:quizId" element={<Quiz />} />
+    </Routes>
+  );
+};
 
-export default App
+export default App;

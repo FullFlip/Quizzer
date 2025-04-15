@@ -70,15 +70,10 @@ public class Question {
         this.choices = choices;
     }
 
-    
-
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
     }
-    public Quiz getQuiz() {
-        return quiz;
-    }   
-
+   
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", title=" + title + ", difficulty=" + difficulty + ", choices="
