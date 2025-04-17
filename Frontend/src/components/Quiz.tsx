@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import AddQuestion from './AddQuestion';
 
 type QuizTypes = {
   title: string;
@@ -19,6 +20,7 @@ type QuizTypes = {
 const Quiz = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
+  const [openAddQuestion, setOpenAddQuestion] = useState(false);
 
   const fetchData = () => {
     fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
@@ -42,7 +44,8 @@ const Quiz = () => {
     fetchData();
   }, []);
 
-  const handleClick = () => {
+  const handleAddQuestionClick = () => {
+    setOpenAddQuestion(true);
     console.log('Edit button clicked');
   };
 
@@ -64,7 +67,7 @@ const Quiz = () => {
         </p>
         <div className='flex justify-between py-2'>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
-          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'>Add question</button>
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={handleAddQuestionClick}>Add question</button>
         </div>
         <ul className="space-y-4">
           {data?.questions.map((question) => (
@@ -76,7 +79,6 @@ const Quiz = () => {
                 <p className="text-lg font-medium text-gray-800">{question.title}</p>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                  onClick={handleClick}
                 >
                   Edit
                 </button>
@@ -103,6 +105,7 @@ const Quiz = () => {
           ))}
         </ul>
       </div>
+      {openAddQuestion && (<AddQuestion handleAddQuestionClick={handleAddQuestionClick} />)}
     </div>
   );
 };
