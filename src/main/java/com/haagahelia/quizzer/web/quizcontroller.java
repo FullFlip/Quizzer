@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
 import com.haagahelia.quizzer.model.Teacher;
+import com.haagahelia.quizzer.repositories.ChoiceRepository;
 import com.haagahelia.quizzer.repositories.QuestionRepository;
 import com.haagahelia.quizzer.repositories.QuizRepository;
 import com.haagahelia.quizzer.services.QuizService;
@@ -37,11 +39,16 @@ public class quizcontroller {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private ChoiceRepository choiceRepository;
+
     @GetMapping("/test")
     @ResponseBody
     public Stream<Teacher> testEndpoint() {
         return teacherService.findOnlyTeacherData();
     }
+
+    //Mappings for Quizzes
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/quizzes/{id}")
@@ -76,7 +83,6 @@ public class quizcontroller {
         return quiz;
     }
 
-
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
@@ -107,7 +113,7 @@ public class quizcontroller {
         quizRepository.delete(quiz);
     }
 
-    // Enpoints for Question
+    // Mappings for Question
 
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/questions")
@@ -135,6 +141,56 @@ public class quizcontroller {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Question with id " + id + " could not be found"));
         questionRepository.delete(question);
+    }
+
+    //Adding a question with choices
+    // This method assumes that the Question object contains a list of Choice objects
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping("/questions-with-choices")
+    public Question addQuestionWithChoices(@RequestBody Question question) {
+        if (question == null || question.getChoices() == null) {
+            throw new IllegalArgumentException("Question or its choices are not provided or are invalid.");
+        }
+
+        // Save the question first
+        Question savedQuestion = questionRepository.save(question);
+
+        // Save each choice and associate it with the saved question
+        for (Choice choice : question.getChoices()) {
+            choice.setQuestion(savedQuestion);
+            choiceRepository.save(choice);
+        }
+
+        return savedQuestion;
+    }
+
+    // Mappings for Choice
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PostMapping("/choices")
+    public Choice addChoice(@RequestBody Choice choice) {
+        if (choice == null) {
+            throw new IllegalArgumentException("Choice data is not provided or is invalid.");
+        }
+        return choiceRepository.save(choice);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PutMapping("/choices/{id}")
+    public Choice editChoice(@PathVariable Long id, @RequestBody Choice updatedChoice) {
+        Choice existingChoice = choiceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Choice with id " + id + " could not be found"));
+        existingChoice.setDescription(updatedChoice.getDescription());
+        existingChoice.setTrue(updatedChoice.isTrue());
+        return choiceRepository.save(existingChoice);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @DeleteMapping("/choices/{id}")
+    public void deleteChoice(@PathVariable Long id) {
+        Choice choice = choiceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Choice with id " + id + " could not be found"));
+        choiceRepository.delete(choice);
     }
 
     @GetMapping("/matti")
