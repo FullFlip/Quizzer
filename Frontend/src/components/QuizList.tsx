@@ -12,6 +12,12 @@ type QuizTypes = {
 
 const QuizList = () => {
     const [data, setData] = useState<QuizTypes[]>([]);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [newQuiz, setNewQuiz] = useState({
+        title: "",
+        description: "",
+        courseCode: ""
+    });
     const navigate = useNavigate();
     
     const fetchData = () => {
@@ -59,9 +65,58 @@ const QuizList = () => {
         
         navigate(`/quiz/${quizId}`);
     };
+    
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setNewQuiz({
+            ...newQuiz,
+            [name]: value
+        });
+    };
 
-    const handleAddQuizClick = () => {
-        console.log("Add quiz button clicked");
+    const handleAddQuizSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!newQuiz.title || !newQuiz.description || !newQuiz.courseCode) {
+            alert("Please fill out all fields");
+            return;
+        }
+        
+        const quizToAdd = {
+            title: newQuiz.title,
+            description: newQuiz.description,
+            courseCode: newQuiz.courseCode,
+            publishedStatus: false,
+            publishedDate: new Date().toISOString().split('T')[0],
+            teacher: { teacherId: 1 } 
+        };
+    
+        fetch("http://localhost:8080/quizzes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(quizToAdd),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((createdQuiz) => {
+                console.log("Quiz created:", createdQuiz);
+                setData([...data, createdQuiz]);
+                setNewQuiz({
+                    title: "",
+                    description: "",
+                    courseCode: ""
+                });
+                setShowAddForm(false);
+            })
+            .catch((error) => {
+                console.error("Error creating quiz:", error);
+            });
     };
 
     return (
@@ -70,12 +125,70 @@ const QuizList = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-4xl font-bold text-gray-800">Quizzes</h1>
                     <button 
-                        onClick={handleAddQuizClick}
+                        onClick={() => setShowAddForm(!showAddForm)}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
                     >
-                        Add Quiz
+                        {showAddForm ? 'Cancel' : 'Add Quiz'}
                     </button>
                 </div>
+                
+                {showAddForm && (
+                    <div className="bg-gray-50 p-4 rounded-lg shadow mb-6">
+                        <form onSubmit={handleAddQuizSubmit} className="space-y-4">
+                            <div>
+                                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Title
+                                </label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={newQuiz.title}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter quiz title"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Description
+                                </label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={newQuiz.description}
+                                    onChange={handleInputChange}
+                                    rows={2}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter quiz description"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="courseCode" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Course Code
+                                </label>
+                                <input
+                                    type="text"
+                                    id="courseCode"
+                                    name="courseCode"
+                                    value={newQuiz.courseCode}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter course code"
+                                />
+                            </div>
+                            <div className="flex justify-end pt-2">
+                                <button
+                                    type="submit"
+                                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
+                                >
+                                    Save Quiz
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+                
                 <div className="grid grid-cols-1 gap-6">
                     {data.map((quiz) => (
                         <div
