@@ -37,7 +37,7 @@ public class Quiz {
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
     @ManyToOne

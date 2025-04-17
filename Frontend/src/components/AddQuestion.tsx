@@ -69,7 +69,6 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
     const addNewQuestion = () => {
         console.log(questionData);
 
-
         fetch("http://localhost:8080/questions-with-choices", {
             method: "POST",
             headers: {
@@ -84,8 +83,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
                 return response.json()
             }
             )
-            .then((data) => console.log(data));
-
+            .then(() => window.location.reload());
     };
 
     return (

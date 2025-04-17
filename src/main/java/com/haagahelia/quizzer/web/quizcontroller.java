@@ -1,5 +1,6 @@
 package com.haagahelia.quizzer.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,6 +25,8 @@ import com.haagahelia.quizzer.repositories.QuestionRepository;
 import com.haagahelia.quizzer.repositories.QuizRepository;
 import com.haagahelia.quizzer.services.QuizService;
 import com.haagahelia.quizzer.services.TeacherService;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 public class quizcontroller {
@@ -107,13 +110,30 @@ public class quizcontroller {
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
+    @Transactional
     @DeleteMapping("/quizzes/{id}")
     public void deleteQuiz(@PathVariable Long id) {
+
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + id + " could not be found"));
-        quizRepository.delete(quiz);
-    }
 
+        List<Question> questions = quiz.getQuestions();
+
+        List<Choice> choices = new ArrayList<>();
+
+        for (Question question : questions) {
+            choices.addAll(question.getChoices());
+        }
+        
+        choiceRepository.deleteAllInBatch(choices);
+        questionRepository.deleteAllInBatch(questions);
+        quizRepository.deleteQuizById(id);
+
+        List<Quiz> quizs = quizRepository.findAll();
+        System.out.println(quizs.size());
+
+        System.out.println("Quiz with id " + id + " has been deleted.");
+    }
     // Mappings for Question
 
     @CrossOrigin(origins = "http://localhost:5173")

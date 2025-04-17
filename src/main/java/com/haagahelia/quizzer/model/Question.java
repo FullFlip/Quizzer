@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -26,10 +27,11 @@ public class Question {
     @Column(name = "difficulty", nullable = false)
     private String difficulty;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Choice> choices;
 
     @ManyToOne
+    @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
     public Question(String title, String difficulty, List<Choice> choices) {
@@ -73,7 +75,7 @@ public class Question {
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
     }
-   
+
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", title=" + title + ", difficulty=" + difficulty + ", choices="
