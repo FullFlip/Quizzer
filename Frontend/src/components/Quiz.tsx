@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AddQuestion from './AddQuestion';
+import EditQuiz from './EditQuiz';
 
 type QuizTypes = {
+  quizId?: number;
   title: string;
   description: string;
   courseCode: string;
+  publishedStatus?: boolean;
+  publishedDate?: string;
   questions: {
     id: number;
     title: string;
@@ -21,6 +25,7 @@ const Quiz = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
+  const [openEditQuiz, setOpenEditQuiz] = useState(false);
 
   const fetchData = () => {
     fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
@@ -42,16 +47,60 @@ const Quiz = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [quizId]);
 
   const handleAddQuestionClick = () => {
     setOpenAddQuestion(!openAddQuestion);
   };
 
+  const handleEditQuizClick = () => {
+    setOpenEditQuiz(!openEditQuiz);
+  };
+
+  const handleSaveQuiz = (updatedQuiz: {
+    title: string;
+    description: string;
+    courseCode: string;
+  }) => {
+    fetch(`http://localhost:8080/quizzes/${quizId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...updatedQuiz,
+        publishedStatus: data?.publishedStatus || false,
+        publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((updatedData) => {
+        setData(updatedData);
+        setOpenEditQuiz(false);
+      })
+      .catch((error) => {
+        console.error('Error updating quiz:', error);
+      });
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Quiz Details</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold text-gray-800">Quiz Details</h1>
+          <button 
+            onClick={handleEditQuizClick}
+            className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600"
+          >
+            Edit Quiz
+          </button>
+        </div>
+        
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Quiz ID:</span> {quizId}
         </p>
@@ -104,7 +153,20 @@ const Quiz = () => {
           ))}
         </ul>
       </div>
+      
       {openAddQuestion && (<AddQuestion quizId={quizId} handleAddQuestionClick={handleAddQuestionClick} />)}
+
+      
+      {openEditQuiz && data && (
+        <EditQuiz
+          quizId={quizId || ''}
+          currentTitle={data.title}
+          currentDescription={data.description}
+          currentCourseCode={data.courseCode}
+          onClose={() => setOpenEditQuiz(false)}
+          onSave={handleSaveQuiz}
+        />
+      )}
     </div>
   );
 };
