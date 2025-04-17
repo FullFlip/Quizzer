@@ -81,9 +81,10 @@ const QuizList = () => {
                         <div
                             className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500/90 text-white hover:cursor-pointer p-6 rounded-lg shadow-md"
                             key={quiz.id}
+                            onClick={() => handleQuizClick(quiz.id)}
                         >
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-2xl font-semibold" onClick={() => handleQuizClick(quiz.id)}>{quiz.title}</h2>
+                                <h2 className="text-2xl font-semibold">{quiz.title}</h2>
                                 <span
                                     className={`px-3 py-1 rounded-full text-sm font-medium ${quiz.publishedStatus
                                         ? "bg-green-500"
