@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +49,7 @@ public class quizcontroller {
         return teacherService.findOnlyTeacherData();
     }
 
-    //Mappings for Quizzes
+    // Mappings for Quizzes
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/quizzes/{id}")
@@ -143,14 +144,23 @@ public class quizcontroller {
         questionRepository.delete(question);
     }
 
-    //Adding a question with choices
-    // This method assumes that the Question object contains a list of Choice objects
+    // Adding a question with choices
+    // This method assumes that the Question object contains a list of Choice
+    // objects
     @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/questions-with-choices")
-    public Question addQuestionWithChoices(@RequestBody Question question) {
+    public Question addQuestionWithChoices(@RequestBody Question question, @RequestHeader("quizId") Long quizId) {
         if (question == null || question.getChoices() == null) {
-            throw new IllegalArgumentException("Question or its choices are not provided or are invalid.");
+            throw new IllegalArgumentException(
+                    "Question, its choices, or associated quiz are not provided or are invalid.");
         }
+
+        // Fetch the associated quiz from the database
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + quizId + " could not be found"));
+
+        // Set the quiz for the question
+        question.setQuiz(quiz);
 
         // Save the question first
         Question savedQuestion = questionRepository.save(question);
@@ -203,6 +213,12 @@ public class quizcontroller {
     @ResponseBody
     public List<Quiz> villeEndpoint() {
         return quizRepository.findAll();
+    }
+
+    @GetMapping("/questions")
+    @ResponseBody
+    public List<Question> questions() {
+        return questionRepository.findAll();
     }
 
 }

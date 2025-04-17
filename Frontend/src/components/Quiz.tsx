@@ -104,7 +104,7 @@ const Quiz = () => {
           ))}
         </ul>
       </div>
-      {openAddQuestion && (<AddQuestion handleAddQuestionClick={handleAddQuestionClick} />)}
+      {openAddQuestion && (<AddQuestion quizId={quizId} handleAddQuestionClick={handleAddQuestionClick} />)}
     </div>
   );
 };

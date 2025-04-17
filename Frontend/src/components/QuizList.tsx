@@ -61,8 +61,6 @@ const QuizList = () => {
     }, []);
 
     const handleQuizClick = (quizId: number) => {
-        console.log(quizId);
-        
         navigate(`/quiz/${quizId}`);
     };
     
@@ -214,7 +212,7 @@ const QuizList = () => {
                             </div>
                             <div className="flex justify-end">
                                 <button
-                                    className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+                                    className="bg-red-600 text-white px-3 py-1 rounded-lg z-1000 hover:bg-red-700"
                                     onClick={() => {
                                         if (window.confirm(`Are you sure you want to delete the quiz "${quiz.title}"?`)) {
                                             handleDelete(quiz.id);
