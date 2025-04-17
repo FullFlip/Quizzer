@@ -45,8 +45,7 @@ const Quiz = () => {
   }, []);
 
   const handleAddQuestionClick = () => {
-    setOpenAddQuestion(true);
-    console.log('Edit button clicked');
+    setOpenAddQuestion(!openAddQuestion);
   };
 
   return (
