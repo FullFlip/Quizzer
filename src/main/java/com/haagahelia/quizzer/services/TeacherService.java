@@ -1,7 +1,6 @@
 package com.haagahelia.quizzer.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
