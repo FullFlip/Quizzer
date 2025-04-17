@@ -62,9 +62,9 @@ const Quiz = () => {
         <p className="text-lg text-gray-600 mb-6">
           <span className="font-semibold">Description:</span> {data?.description}
         </p>
-        <div className='flex justify-between'>
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
-        <button>Add question</button>
+        <div className='flex justify-between py-2'>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600'>Add question</button>
         </div>
         <ul className="space-y-4">
           {data?.questions.map((question) => (
@@ -89,9 +89,8 @@ const Quiz = () => {
                 {question.choices.map((choice, index) => (
                   <li
                     key={index}
-                    className={`p-2 rounded-lg ${
-                      choice.true ? 'bg-green-100' : 'bg-red-100'
-                    }`}
+                    className={`p-2 rounded-lg ${choice.true ? 'bg-green-100' : 'bg-red-100'
+                      }`}
                   >
                     <p className="text-gray-800">{choice.description}</p>
                     <p className="text-sm text-gray-600">
