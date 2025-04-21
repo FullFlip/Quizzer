@@ -1,21 +1,28 @@
 package com.haagahelia.quizzer.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
-@Controller
+
+    @Controller
 public class FallbackController {
 
-    // Forward the root URL to index.html
-    @RequestMapping("/")
+    // Handle GET for root
+    @GetMapping("/")
     public String root() {
         return "forward:/index.html";
     }
     
-    // Forward any one-level path that does NOT contain a period
-    @RequestMapping("/{path:[^\\.]+}")
+    // Handle GET for one-level paths without a dot
+    @GetMapping("/{path:[^\\.]+}")
     public String oneLevelFallback() {
+        return "forward:/index.html";
+    }
+    
+    // (Optional) Handle GET for two-level paths without a dot
+    @GetMapping("/{path1:[^\\.]+}/{path2:[^\\.]+}")
+    public String twoLevelFallback() {
         return "forward:/index.html";
     }
 }
