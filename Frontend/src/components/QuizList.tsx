@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddQuiz from './AddQuiz';
 
@@ -14,8 +14,10 @@ type QuizTypes = {
 const QuizList = () => {
     const [data, setData] = useState<QuizTypes[]>([]);
     const navigate = useNavigate();
+    const apiUrl = import.meta.env.VITE_API_URL || "";
+
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes/1", {
+        fetch(`${apiUrl}/quizzes/1`, {
             method: "GET",
         })
             .then((response) => {
@@ -36,7 +38,7 @@ const QuizList = () => {
     };
 
     const handleDelete = (quizId: number) => {
-        fetch(`http://localhost:8080/quizzes/${quizId}`, {
+        fetch(`${apiUrl}/quizzes/${quizId}`, {
             method: "DELETE",
         })
             .then((response) => {
@@ -66,7 +68,7 @@ const QuizList = () => {
         publishedDate: string;
         teacher: { teacherId: number }
     }) => {
-        fetch("http://localhost:8080/quizzes", {
+        fetch(`${apiUrl}/quizzes`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

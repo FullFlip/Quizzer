@@ -26,9 +26,10 @@ const Quiz = () => {
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL || "";
 
   const fetchData = () => {
-    fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
+    fetch(`${apiUrl}/quizzes/${quizId}/questions`, {
       method: 'GET',
     })
       .then((response) => {
@@ -62,7 +63,7 @@ const Quiz = () => {
     description: string;
     courseCode: string;
   }) => {
-    fetch(`http://localhost:8080/quizzes/${quizId}`, {
+    fetch(`${apiUrl}/quizzes/${quizId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

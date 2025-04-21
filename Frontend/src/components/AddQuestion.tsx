@@ -25,6 +25,8 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
         { id: 2, answer: "", isCorrect: false },
     ]);
 
+    const apiUrl = import.meta.env.VITE_API_URL || "";
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuestionData({ ...questionData, title: event.target.value });
     };
@@ -69,7 +71,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
     const addNewQuestion = () => {
         console.log(questionData);
 
-        fetch("http://localhost:8080/questions-with-choices", {
+        fetch(`${apiUrl}/questions-with-choices`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

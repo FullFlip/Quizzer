@@ -3,7 +3,6 @@ package com.haagahelia.quizzer.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,31 +28,31 @@ public class quizcontroller {
     @Autowired
     private QuestionOperationService questionOperationService;
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
         return quizOperationService.getAllQuizzesByTeacher(id);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @GetMapping("/quizzes/{id}/questions")
     public Quiz getQuestionsForQuiz(@PathVariable Long id) {
         return quizOperationService.getQuizWithQuestions(id);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
         return quizOperationService.addQuiz(quiz);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @PutMapping("/quizzes/{id}")
     public Quiz editQuiz(@PathVariable Long id, @RequestBody Quiz updatedQuiz) {
         return quizOperationService.editQuiz(id, updatedQuiz);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @Transactional
     @DeleteMapping("/quizzes/{id}")
     public void deleteQuiz(@PathVariable Long id) {
@@ -61,7 +60,7 @@ public class quizcontroller {
         System.out.println("Quiz with id " + id + " has been deleted.");
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    
     @PostMapping("/questions-with-choices")
     public Question addQuestionWithChoices(@RequestBody Question question, @RequestHeader("quizId") Long quizId) {
         return questionOperationService.addQuestionWithChoices(question, quizId);

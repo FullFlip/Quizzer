@@ -14,7 +14,7 @@ type EditQuizProps = {
 };
 
 const EditQuiz: React.FC<EditQuizProps> = ({
-  quizId,
+  
   currentTitle,
   currentDescription,
   currentCourseCode,
