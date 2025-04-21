@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class FallbackController {
 
-    // Catch root and any paths without a file extension
-    @RequestMapping(value = { "/", "/{path:[^\\.]*}", "/**/{path:^(?!.*\\.).*$}" })
-    public String fallback() {
+    // Forward the root URL to index.html
+    @RequestMapping("/")
+    public String root() {
+        return "forward:/index.html";
+    }
+    
+    // Forward any one-level path that does NOT contain a period
+    @RequestMapping("/{path:[^\\.]+}")
+    public String oneLevelFallback() {
         return "forward:/index.html";
     }
 }
