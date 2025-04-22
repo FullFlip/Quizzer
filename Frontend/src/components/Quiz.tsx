@@ -91,7 +91,7 @@ const Quiz = () => {
   const handleDeleteQuestion = (questionId: number) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this question?");
     if (!confirmDelete) {
-      return; // Exit if the user cancels the deletion
+      return;
     }
     
     fetch(`http://localhost:8080/question/${questionId}`, {
