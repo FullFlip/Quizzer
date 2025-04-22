@@ -88,19 +88,46 @@ const Quiz = () => {
       });
   };
 
+  const handleDeleteQuestion = (questionId: number) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this question?");
+    if (!confirmDelete) {
+      return; // Exit if the user cancels the deletion
+    }
+    
+    fetch(`http://localhost:8080/question/${questionId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setData((prevData) => {
+          if (!prevData) return prevData;
+          return {
+            ...prevData,
+            questions: prevData.questions.filter((question) => question.id !== questionId),
+          };
+        });
+      })
+      .catch((error) => {
+        console.error('Error deleting question:', error);
+      });
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold text-gray-800">Quiz Details</h1>
-          <button 
+          <button
             onClick={handleEditQuizClick}
             className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600"
           >
             Edit Quiz
           </button>
         </div>
-        
+
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Quiz ID:</span> {quizId}
         </p>
@@ -134,13 +161,21 @@ const Quiz = () => {
               key={question.id}
               className="border border-gray-300 rounded-lg p-4 bg-gray-50 shadow-sm"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between mb-2">
                 <p className="text-lg font-medium text-gray-800">{question.title}</p>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Edit
-                </button>
+                <div className='flex flex-col gap-4'>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    onClick={() => handleDeleteQuestion(question.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
               <p className="text-sm text-gray-600 mb-2">
                 <span className="font-semibold">Difficulty:</span> {question.difficulty}
@@ -164,10 +199,10 @@ const Quiz = () => {
           ))}
         </ul>
       </div>
-      
+
       {openAddQuestion && (<AddQuestion quizId={quizId} handleAddQuestionClick={handleAddQuestionClick} />)}
 
-      
+
       {openEditQuiz && data && (
         <EditQuiz
           quizId={quizId || ''}

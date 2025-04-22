@@ -66,4 +66,13 @@ public class quizcontroller {
     public Question addQuestionWithChoices(@RequestBody Question question, @RequestHeader("quizId") Long quizId) {
         return questionOperationService.addQuestionWithChoices(question, quizId);
     }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @DeleteMapping("/question/{id}")
+    public void deleteQuestionWithId(@PathVariable("id") Long questionId) {
+        if(questionId == null){
+            throw new IllegalArgumentException("Invalid id");
+        }
+        questionOperationService.deleteQuestionWithId(questionId);
+    }
 }
