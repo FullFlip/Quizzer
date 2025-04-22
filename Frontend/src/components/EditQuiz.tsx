@@ -5,11 +5,14 @@ type EditQuizProps = {
   currentTitle: string;
   currentDescription: string;
   currentCourseCode: string;
+  currentPublishedStatus: boolean;
+  
   onClose: () => void;
   onSave: (updatedQuiz: {
     title: string;
     description: string;
     courseCode: string;
+    publishedStatus: boolean;
   }) => void;
 };
 
@@ -18,13 +21,15 @@ const EditQuiz: React.FC<EditQuizProps> = ({
   currentTitle,
   currentDescription,
   currentCourseCode,
+  currentPublishedStatus,
   onClose,
   onSave
 }) => {
   const [quizData, setQuizData] = useState({
     title: currentTitle,
     description: currentDescription,
-    courseCode: currentCourseCode
+    courseCode: currentCourseCode,
+    publishedStatus: currentPublishedStatus
   });
 
   const handleChange = (
@@ -34,6 +39,13 @@ const EditQuiz: React.FC<EditQuizProps> = ({
     setQuizData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleToggleChange = () => {
+    setQuizData(prev => ({
+      ...prev,
+      publishedStatus: !prev.publishedStatus
     }));
   };
 
@@ -90,6 +102,25 @@ const EditQuiz: React.FC<EditQuizProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+          </div>
+          
+          <div className="flex items-center">
+            <label htmlFor="publishedStatus" className="flex items-center cursor-pointer">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="publishedStatus"
+                  className="sr-only"
+                  checked={quizData.publishedStatus}
+                  onChange={handleToggleChange}
+                />
+                <div className={`block w-14 h-8 rounded-full ${quizData.publishedStatus ? 'bg-green-600' : 'bg-gray-400'}`}></div>
+                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${quizData.publishedStatus ? 'transform translate-x-6' : ''}`}></div>
+              </div>
+              <span className="ml-3 font-medium text-gray-700">
+                {quizData.publishedStatus ? 'Published' : 'Not Published'}
+              </span>
+            </label>
           </div>
           
           <div className="flex justify-end space-x-3 pt-4">

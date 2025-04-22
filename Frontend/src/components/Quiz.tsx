@@ -61,6 +61,7 @@ const Quiz = () => {
     title: string;
     description: string;
     courseCode: string;
+    publishedStatus: boolean;
   }) => {
     fetch(`http://localhost:8080/quizzes/${quizId}`, {
       method: 'PUT',
@@ -69,7 +70,6 @@ const Quiz = () => {
       },
       body: JSON.stringify({
         ...updatedQuiz,
-        publishedStatus: data?.publishedStatus || false,
         publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
       }),
     })
@@ -110,9 +110,20 @@ const Quiz = () => {
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Title:</span> {data?.title}
         </p>
-        <p className="text-lg text-gray-600 mb-6">
+        <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Description:</span> {data?.description}
         </p>
+        <div className="text-lg text-gray-600 mb-6 flex items-center">
+          <span className="font-semibold mr-2">Status:</span>
+          <span 
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              data?.publishedStatus ? "bg-green-500 text-white" : "bg-red-500 text-white"
+            }`}
+          >
+            {data?.publishedStatus ? "Published" : "Not Published"}
+          </span>
+        </div>
+        
         <div className='flex justify-between py-2'>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
           <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={handleAddQuestionClick}>Add question</button>
@@ -163,6 +174,7 @@ const Quiz = () => {
           currentTitle={data.title}
           currentDescription={data.description}
           currentCourseCode={data.courseCode}
+          currentPublishedStatus={data.publishedStatus || false}
           onClose={() => setOpenEditQuiz(false)}
           onSave={handleSaveQuiz}
         />
