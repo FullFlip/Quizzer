@@ -32,7 +32,4 @@ public class TeacherService {
     public void addNewTeacher(Teacher teacher) {
         teacherRepository.save(teacher);
     }
-
-    
-
 }

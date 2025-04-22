@@ -36,4 +36,8 @@ public class QuestionOperationService {
         }
         return savedQuestion;
     }
+
+    public void deleteQuestionWithId(Long id) {
+        questionRepository.deleteById(id);
+    }
 }
