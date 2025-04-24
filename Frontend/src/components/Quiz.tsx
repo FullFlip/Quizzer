@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddQuestion from './AddQuestion';
 import EditQuiz from './EditQuiz';
 
@@ -26,7 +26,7 @@ const Quiz = () => {
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
-
+  const navigate = useNavigate();
   const fetchData = () => {
     fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
       method: 'GET',
@@ -114,11 +114,19 @@ const Quiz = () => {
         console.error('Error deleting question:', error);
       });
   }
-
+  const handleHomeClick = () => {
+    navigate(`/`);
+};
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
+        <button
+              onClick={handleHomeClick}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+            >
+              Back to Home
+            </button>
           <h1 className="text-3xl font-bold text-gray-800">Quiz Details</h1>
           <button
             onClick={handleEditQuizClick}
@@ -127,6 +135,7 @@ const Quiz = () => {
             Edit Quiz
           </button>
         </div>
+    
 
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Quiz ID:</span> {quizId}
