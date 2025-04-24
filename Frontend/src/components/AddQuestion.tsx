@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import AddChoice from "./AddChoice";
+import { QuestionProps } from "../Types";
 
-type AddQuestionProps = {
-    quizId: string | undefined;
-    handleAddQuestionClick: (shouldClose: boolean) => void;
-};
-
-const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
+const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: QuestionProps) => {
     const [questionData, setQuestionData] = useState({
         quiz: {
             id: quizId,
         },
-        title: "",
-        difficulty: "",
-        choices: Array<{
-            id: number;
-            description: string;
-            true: boolean;
-        }>(),
+        title: questionToEdit?.title || "",
+        difficulty: questionToEdit?.difficulty || "",
+        choices: questionToEdit?.choices || [],
     });
 
-    const [choices, setChoices] = useState<{ id: number; answer: string; isCorrect: boolean }[]>([
-        { id: 1, answer: "", isCorrect: false },
-        { id: 2, answer: "", isCorrect: false },
-    ]);
+    const [choices, setChoices] = useState<{ id: number; answer: string; isCorrect: boolean }[]>(
+        questionToEdit
+            ? questionToEdit.choices.map((choice) => ({
+                  id: choice.choiceId,
+                  answer: choice.description,
+                  isCorrect: choice.true,
+              }))
+            : [
+                  { id: 1, answer: "", isCorrect: false },
+                  { id: 2, answer: "", isCorrect: false },
+              ]
+    );
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuestionData({ ...questionData, title: event.target.value });
@@ -49,6 +49,8 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
     };
 
     const toggleIsCorrect = (id: number) => {
+        console.log(id);
+        
         const updatedChoices = choices.map((choice) =>
             choice.id === id ? { ...choice, isCorrect: !choice.isCorrect } : choice
         );
@@ -59,18 +61,24 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
         setQuestionData((prevData) => ({
             ...prevData,
             choices: choices.map((choice) => ({
-                id: choice.id,
+                choiceId: choice.id,
                 description: choice.answer,
                 true: choice.isCorrect,
             })),
         }));
     }, [choices]);
 
-    const addNewQuestion = () => {
+    const saveQuestion = () => {
         console.log(questionData);
+        
+        const url = questionToEdit
+            ? `http://localhost:8080/question/${questionToEdit.id}`
+            : "http://localhost:8080/questions-with-choices";
 
-        fetch("http://localhost:8080/questions-with-choices", {
-            method: "POST",
+        const method = questionToEdit ? "PUT" : "POST";
+        const alertMessage = questionToEdit ? "Question modified successfully" : "Question added successfully"
+        fetch(url, {
+            method,
             headers: {
                 "Content-Type": "application/json",
                 ...(quizId && { quizId }),
@@ -78,18 +86,20 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
             body: JSON.stringify(questionData),
         })
             .then((response) => {
-                console.log(response);
-
-                return response.json()
-            }
-            )
-            .then(() => window.location.reload());
+                if(response.ok){
+                    console.log(response);
+                    window.alert(alertMessage)
+                }
+            })
+           // .then(() => window.location.reload());
     };
 
     return (
         <div className="fixed inset-0 bg-gray-800/90 flex justify-center items-center">
             <div className="w-4/6 bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Add a New Question</h2>
+                <h2 className="text-xl font-bold mb-4">
+                    {questionToEdit ? "Edit Question" : "Add a New Question"}
+                </h2>
 
                 <form className="h-fit w-full py-4">
                     <input
@@ -144,7 +154,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
                 <div className="flex justify-between">
                     <button
                         className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                        onClick={() => handleAddQuestionClick(false)}
+                        onClick={() => handleAddQuestionClick?.(false)}
                     >
                         Close
                     </button>
@@ -152,10 +162,10 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
                     <button
                         className="bg-emerald-400 text-white px-4 py-2 rounded-lg hover:bg-emerald-600"
                         onClick={() => {
-                            addNewQuestion();
+                            saveQuestion();
                         }}
                     >
-                        Add
+                        {questionToEdit ? "Save Changes" : "Add"}
                     </button>
                 </div>
             </div>

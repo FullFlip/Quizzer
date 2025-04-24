@@ -25,7 +25,7 @@ public class quizcontroller {
 
     @Autowired
     private QuizOperationService quizOperationService;
-    
+
     @Autowired
     private QuestionOperationService questionOperationService;
 
@@ -70,9 +70,24 @@ public class quizcontroller {
     @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/question/{id}")
     public void deleteQuestionWithId(@PathVariable("id") Long questionId) {
-        if(questionId == null){
+        if (questionId == null) {
             throw new IllegalArgumentException("Invalid id");
         }
         questionOperationService.deleteQuestionWithId(questionId);
     }
+
+    @CrossOrigin(origins = "http://localhost:5173")
+    @PutMapping("/question/{id}")
+    public void updateQuestionWithId(@PathVariable("id") Long questionId, @RequestBody Question question) {
+    
+        if (question == null) {
+            throw new IllegalArgumentException("Provided question was null");
+        }
+
+        if (questionId == null) {
+            throw new IllegalArgumentException("Invalid id");
+        }
+        questionOperationService.updateQuestion(questionId, question);
+    }
+
 }

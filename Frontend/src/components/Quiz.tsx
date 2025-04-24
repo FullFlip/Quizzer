@@ -2,30 +2,16 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AddQuestion from './AddQuestion';
 import EditQuiz from './EditQuiz';
+import { QuestionProps, QuizTypes } from '../Types';
 
-type QuizTypes = {
-  quizId?: number;
-  title: string;
-  description: string;
-  courseCode: string;
-  publishedStatus?: boolean;
-  publishedDate?: string;
-  questions: {
-    id: number;
-    title: string;
-    difficulty: string;
-    choices: {
-      description: string;
-      true: boolean;
-    }[];
-  }[];
-};
 
 const Quiz = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<QuestionProps | null>(null);
+
 
   const fetchData = () => {
     fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
@@ -38,6 +24,8 @@ const Quiz = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
+        
         setData(data);
       })
       .catch((error) => {
@@ -50,6 +38,7 @@ const Quiz = () => {
   }, [quizId]);
 
   const handleAddQuestionClick = () => {
+    setSelectedQuestion(null);
     setOpenAddQuestion(!openAddQuestion);
   };
 
@@ -115,6 +104,11 @@ const Quiz = () => {
       });
   }
 
+  const handleEditQuestionClick = (question: QuestionProps) => {
+    setSelectedQuestion(question);
+    setOpenAddQuestion(true);
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
@@ -155,6 +149,10 @@ const Quiz = () => {
                 <div className='flex flex-col gap-4'>
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    onClick={() => {
+                      handleEditQuestionClick(question)
+                    }
+                    }
                   >
                     Edit
                   </button>
@@ -189,7 +187,12 @@ const Quiz = () => {
         </ul>
       </div>
 
-      {openAddQuestion && (<AddQuestion quizId={quizId} handleAddQuestionClick={handleAddQuestionClick} />)}
+      {openAddQuestion && (
+        <AddQuestion
+          quizId={quizId}
+          handleAddQuestionClick={handleAddQuestionClick}
+          questionToEdit={selectedQuestion || undefined} id={0} title={''} difficulty={''} choices={[]} />
+      )}
 
 
       {openEditQuiz && data && (
