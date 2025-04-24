@@ -4,6 +4,7 @@ type QuizFormData = {
     title: string;
     description: string;
     courseCode: string;
+    publishedStatus: boolean;
 }
 
 type AddQuizProps = {
@@ -22,7 +23,8 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
     const [newQuiz, setNewQuiz] = useState<QuizFormData>({
         title: "",
         description: "",
-        courseCode: ""
+        courseCode: "",
+        publishedStatus: false
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,6 +32,13 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
         setNewQuiz({
             ...newQuiz,
             [name]: value
+        });
+    };
+
+    const handleToggleChange = () => {
+        setNewQuiz({
+            ...newQuiz,
+            publishedStatus: !newQuiz.publishedStatus
         });
     };
 
@@ -45,7 +54,7 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
             title: newQuiz.title,
             description: newQuiz.description,
             courseCode: newQuiz.courseCode,
-            publishedStatus: false,
+            publishedStatus: newQuiz.publishedStatus,
             publishedDate: new Date().toISOString().split('T')[0],
             teacher: { teacherId: 1 } 
         };
@@ -55,7 +64,8 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
         setNewQuiz({
             title: "",
             description: "",
-            courseCode: ""
+            courseCode: "",
+            publishedStatus: false
         });
         setShowAddForm(false);
     };
@@ -116,6 +126,24 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Enter course code"
                             />
+                        </div>
+                        <div className="flex items-center">
+                            <label htmlFor="publishedStatus" className="flex items-center cursor-pointer">
+                                <div className="relative">
+                                    <input
+                                        type="checkbox"
+                                        id="publishedStatus"
+                                        className="sr-only"
+                                        checked={newQuiz.publishedStatus}
+                                        onChange={handleToggleChange}
+                                    />
+                                    <div className={`block w-14 h-8 rounded-full ${newQuiz.publishedStatus ? 'bg-green-600' : 'bg-gray-400'}`}></div>
+                                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${newQuiz.publishedStatus ? 'transform translate-x-6' : ''}`}></div>
+                                </div>
+                                <span className="ml-3 font-medium text-gray-700">
+                                    {newQuiz.publishedStatus ? 'Published' : 'Not Published'}
+                                </span>
+                            </label>
                         </div>
                         <div className="flex justify-end pt-2">
                             <button

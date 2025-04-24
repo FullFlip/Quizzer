@@ -12,3 +12,43 @@ Working as a four man team in a project called Quizzer. The project lasts 6 week
   
 ### Backlog
 [Link to the Backlog](https://github.com/orgs/FullFlip/projects/1)
+
+### Data diagram
+```mermaid
+classDiagram
+direction LR
+
+class Category {
+  +Long ID
+  +String Name
+}
+
+class Quiz {
+  +String title
+  +String description
+  +String courseCode
+  +Boolean publishedStatus
+  +List~Question~ questions
+}
+
+class Question {
+  +String title
+  +Integer difficulty
+  +List~Choice~ choices
+}
+
+class Choice {
+  +Boolean isTrue
+  +String description
+}
+
+class Answer {
+  +String description
+}
+
+Category "0..1" -- "0..*" Quiz
+Quiz     "1"    -- "0..*" Question
+Question "1"    -- "1..*" Choice
+Choice   "1"    -- "0..*" Answer
+
+```
