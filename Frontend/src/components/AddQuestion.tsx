@@ -12,7 +12,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
             id: quizId,
         },
         title: "",
-        difficulty: "hard",
+        difficulty: "",
         choices: Array<{
             id: number;
             description: string;
@@ -99,8 +99,29 @@ const AddQuestion = ({ handleAddQuestionClick, quizId }: AddQuestionProps) => {
                         value={questionData.title}
                         onChange={handleChange}
                         className="my-3 font-medium font-sans text-black placeholder:text-black/50
-                         bg-transparent border text-2xl w-full shadow-xl p-2 rounded"
+                         bg-transparent border text-xl w-full shadow-xl p-2 rounded"
                     />
+
+                    <div className="my-4">
+                        <label htmlFor="difficulty" className="block text-lg font-semibold mb-2">
+                            Difficulty
+                        </label>
+                        <select
+                            id="difficulty"
+                            name="difficulty"
+                            value={questionData.difficulty}
+                            onChange={(e) => setQuestionData({ ...questionData, difficulty: e.target.value })}
+                            className="w-full p-2 border rounded shadow-sm text-black"
+                        >
+                            <option value="" disabled>
+                                Select difficulty
+                            </option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+
                     <div className="w-full flex justify-between py-2">
                         <h3 className="font-semibold text-xl mb-2">Choices</h3>
                         <button
