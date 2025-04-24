@@ -17,6 +17,17 @@ export type QuizTypes = {
     }[];
 };
 
+export type AddChoiceProps = {
+    choice: {
+        id: number;
+        answer: string;
+        isCorrect: boolean;
+    };
+    onChange: (id: number, value: string) => void;
+    onToggleCorrect: (id: number) => void;
+    onDelete: (id: number) => void;
+};
+
 export type QuestionProps = {
     id: number;
     title: string;

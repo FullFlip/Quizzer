@@ -57,6 +57,10 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
         setChoices(updatedChoices);
     };
 
+    const handleDeleteChoice = (id: number) => {
+        setChoices((prevChoices) => prevChoices.filter((choice) => choice.id !== id));
+    };
+
     useEffect(() => {
         setQuestionData((prevData) => ({
             ...prevData,
@@ -148,6 +152,7 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
                             choice={choice}
                             onChange={handleChoiceChange}
                             onToggleCorrect={toggleIsCorrect}
+                            onDelete={handleDeleteChoice}
                         />
                     ))}
                 </form>

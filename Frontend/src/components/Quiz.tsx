@@ -12,7 +12,7 @@ const Quiz = () => {
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionProps | null>(null);
   const navigate = useNavigate();
-  
+
   const fetchData = () => {
     fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
       method: 'GET',
@@ -25,7 +25,7 @@ const Quiz = () => {
       })
       .then((data) => {
         console.log(data);
-        
+
         setData(data);
       })
       .catch((error) => {
@@ -82,7 +82,7 @@ const Quiz = () => {
     if (!confirmDelete) {
       return;
     }
-    
+
     fetch(`http://localhost:8080/question/${questionId}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
@@ -111,17 +111,17 @@ const Quiz = () => {
 
   const handleHomeClick = () => {
     navigate(`/`);
-};
+  };
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
-        <button
-              onClick={handleHomeClick}
-              className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-            >
-              Back to Home
-            </button>
+          <button
+            onClick={handleHomeClick}
+            className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+          >
+            Back to Home
+          </button>
           <h1 className="text-3xl font-bold text-gray-800">Quiz Details</h1>
           <button
             onClick={handleEditQuizClick}
@@ -130,7 +130,7 @@ const Quiz = () => {
             Edit Quiz
           </button>
         </div>
-    
+
 
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Quiz ID:</span> {quizId}
@@ -146,15 +146,14 @@ const Quiz = () => {
         </p>
         <div className="text-lg text-gray-600 mb-6 flex items-center">
           <span className="font-semibold mr-2">Status:</span>
-          <span 
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
-              data?.publishedStatus ? "bg-green-500 text-white" : "bg-red-500 text-white"
-            }`}
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${data?.publishedStatus ? "bg-green-500 text-white" : "bg-red-500 text-white"
+              }`}
           >
             {data?.publishedStatus ? "Published" : "Not Published"}
           </span>
         </div>
-        
+
         <div className='flex justify-between py-2'>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
           <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={handleAddQuestionClick}>Add question</button>
@@ -171,6 +170,7 @@ const Quiz = () => {
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                     onClick={() => {
+                      //Type error, do not touch
                       handleEditQuestionClick(question)
                     }
                     }

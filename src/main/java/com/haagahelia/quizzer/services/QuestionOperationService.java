@@ -63,14 +63,11 @@ public class QuestionOperationService {
         existingQuestion.setTitle(updatedQuestion.getTitle());
         existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
 
-        choiceRepository.deleteAll(existingQuestion.getChoices());
-
-        for (Choice choice : updatedQuestion.getChoices()) {
-            choice.setQuestion(existingQuestion);
-            choiceRepository.save(choice);
+        existingQuestion.getChoices().clear();
+        for (Choice updatedChoice : updatedQuestion.getChoices()) {
+            updatedChoice.setQuestion(existingQuestion); 
+            existingQuestion.getChoices().add(updatedChoice);
         }
-
         questionRepository.save(existingQuestion);
     }
-
 }
