@@ -53,3 +53,42 @@ Choice   "1"    -- "0..*" Answer
 
 ```
 ### Instructions
+#### Basic setup
+1. Clone the repository
+ ```
+git clone https://github.com/FullFlip/Quizzer.git
+ ```
+2. Go to the folder
+ ```
+cd Quizzer
+ ```
+3. Open the application to VScode.
+ ```
+code .
+ ```
+If that didn't work just open the Quizzer folder inside ur preferred IDE
+
+4. Run the application from the __QuizzerApplication.java__ file or start the program from Spring boot dashboard
+5. Go to front end folder
+ ```
+cd Frontend
+ ```
+6. Install dependencies
+ ```
+npm install
+ ```
+7. After they are installed you can start the front end
+ ```
+npm run dev
+ ```
+8. The output is probably something like
+ ```
+
+  VITE v6.2.4  ready in 620 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+ ```
+9. Go to the link and enjoy
+
