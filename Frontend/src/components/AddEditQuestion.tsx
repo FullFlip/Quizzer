@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AddChoice from "./AddChoice";
 import { QuestionProps } from "../Types";
 
-const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: QuestionProps) => {
+const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: QuestionProps) => {
     const [questionData, setQuestionData] = useState({
         quiz: {
             id: quizId,
@@ -15,14 +15,14 @@ const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Questio
     const [choices, setChoices] = useState<{ id: number; answer: string; isCorrect: boolean }[]>(
         questionToEdit
             ? questionToEdit.choices.map((choice) => ({
-                  id: choice.choiceId,
-                  answer: choice.description,
-                  isCorrect: choice.true,
-              }))
+                id: choice.choiceId,
+                answer: choice.description,
+                isCorrect: choice.true,
+            }))
             : [
-                  { id: 1, answer: "", isCorrect: false },
-                  { id: 2, answer: "", isCorrect: false },
-              ]
+                { id: 1, answer: "", isCorrect: false },
+                { id: 2, answer: "", isCorrect: false },
+            ]
     );
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +50,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Questio
 
     const toggleIsCorrect = (id: number) => {
         console.log(id);
-        
+
         const updatedChoices = choices.map((choice) =>
             choice.id === id ? { ...choice, isCorrect: !choice.isCorrect } : choice
         );
@@ -70,7 +70,7 @@ const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Questio
 
     const saveQuestion = () => {
         console.log(questionData);
-        
+
         const url = questionToEdit
             ? `http://localhost:8080/question/${questionToEdit.id}`
             : "http://localhost:8080/questions-with-choices";
@@ -86,12 +86,12 @@ const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Questio
             body: JSON.stringify(questionData),
         })
             .then((response) => {
-                if(response.ok){
+                if (response.ok) {
                     console.log(response);
                     window.alert(alertMessage)
                 }
             })
-           // .then(() => window.location.reload());
+            .then(() => window.location.reload());
     };
 
     return (
@@ -173,4 +173,4 @@ const AddQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Questio
     );
 };
 
-export default AddQuestion;
+export default AddEditQuestion;
