@@ -51,7 +51,13 @@ export type QuizFormData = {
     title: string;
     description: string;
     courseCode: string;
+    categoryId: number,
     publishedStatus: boolean;
+}
+
+export type Category = {
+    categoryId: number;
+    title: string;
 }
 
 export type AddQuizProps = {
@@ -61,6 +67,7 @@ export type AddQuizProps = {
         courseCode: string;
         publishedStatus: boolean;
         publishedDate: string;
+        categoryId: number;
         teacher: { teacherId: number }
     }) => void;
 }
@@ -71,12 +78,12 @@ export type EditQuizProps = {
     currentDescription: string;
     currentCourseCode: string;
     currentPublishedStatus: boolean;
-    
+
     onClose: () => void;
     onSave: (updatedQuiz: {
-      title: string;
-      description: string;
-      courseCode: string;
-      publishedStatus: boolean;
+        title: string;
+        description: string;
+        courseCode: string;
+        publishedStatus: boolean;
     }) => void;
-  };
+};

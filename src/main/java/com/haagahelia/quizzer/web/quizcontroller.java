@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.haagahelia.quizzer.dto.QuizDto;
 import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
@@ -46,8 +47,8 @@ public class quizcontroller {
     }
 
     @PostMapping("/quizzes")
-    public Quiz addQuiz(@RequestBody Quiz quiz) {
-        return quizOperationService.addQuiz(quiz);
+    public Quiz addQuiz(@RequestBody QuizDto quiz) {
+        return quizOperationService.addQuizDto(quiz);
     }
 
     @PutMapping("/quizzes/{id}")

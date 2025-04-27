@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
-import { QuizFormData, AddQuizProps } from "../Types";
+import React, { useState, useEffect } from 'react';
+import { QuizFormData, AddQuizProps, Category } from "../Types";
 
 const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
     const [showAddForm, setShowAddForm] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [newQuiz, setNewQuiz] = useState<QuizFormData>({
         title: "",
         description: "",
         courseCode: "",
+        categoryId: 0,
         publishedStatus: false
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                await fetch('http://localhost:8080/categories')
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                        setCategories(data);
+                    });
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setNewQuiz({
             ...newQuiz,
-            [name]: value
+            [name]: name === "categoryId" ? Number(value) : value // Parse categoryId as a number
         });
     };
 
@@ -27,27 +45,28 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
 
     const handleAddQuizSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
-        if (!newQuiz.title || !newQuiz.description || !newQuiz.courseCode) {
+
+        if (!newQuiz.title || !newQuiz.description || !newQuiz.courseCode || !newQuiz.categoryId) {
             alert("Please fill out all fields");
             return;
         }
-        
+
         const quizToAdd = {
             title: newQuiz.title,
             description: newQuiz.description,
             courseCode: newQuiz.courseCode,
+            categoryId: newQuiz.categoryId,
             publishedStatus: newQuiz.publishedStatus,
             publishedDate: new Date().toISOString().split('T')[0],
-            teacher: { teacherId: 1 } 
+            teacher: { teacherId: 1 }
         };
-    
+
         onAddQuiz(quizToAdd);
-        
         setNewQuiz({
             title: "",
             description: "",
             courseCode: "",
+            categoryId: 0,
             publishedStatus: false
         });
         setShowAddForm(false);
@@ -57,14 +76,14 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-4xl font-bold text-gray-800">Quizzes</h1>
-                <button 
+                <button
                     onClick={() => setShowAddForm(!showAddForm)}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
                 >
                     {showAddForm ? 'Cancel' : 'Add Quiz'}
                 </button>
             </div>
-            
+
             {showAddForm && (
                 <div className="bg-gray-50 p-4 rounded-lg shadow mb-6">
                     <form onSubmit={handleAddQuizSubmit} className="space-y-4">
@@ -109,6 +128,25 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz }) => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Enter course code"
                             />
+                        </div>
+                        <div>
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                                Category
+                            </label>
+                            <select
+                                id="category"
+                                name="categoryId"
+                                value={newQuiz.categoryId}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((category) => (
+                                    <option key={category.categoryId} value={category.categoryId}>
+                                        {category.title}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="flex items-center">
                             <label htmlFor="publishedStatus" className="flex items-center cursor-pointer">
