@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddQuiz from './AddQuiz';
+import Categories from './Categories';
 
 type QuizTypes = {
     id: number;
@@ -91,6 +92,7 @@ const QuizList = () => {
     return (
         <div className="bg-gray-100 min-h-screen p-6" >
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                <Categories />
                 <AddQuiz onAddQuiz={handleAddQuiz} />
 
                 <div className="grid grid-cols-1 gap-6">

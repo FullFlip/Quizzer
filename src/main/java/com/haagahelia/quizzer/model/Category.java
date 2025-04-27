@@ -1,6 +1,9 @@
 package com.haagahelia.quizzer.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,15 +20,17 @@ public class Category {
     @Column(name = "category_id", nullable = false, updatable = false)
     private Long categoryId;
 
-
     @Column(name = "title", nullable = false)
     private String title;
 
-      // One category can have zero to many quizzes
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Quiz> quizzes;
+    @Column(name = "description")
+    private String description;
 
-      // Getters and setters
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Quiz> quizzes = new ArrayList<>();
+
+    // Getters and setters
     public Long getCategoryId() {
         return categoryId;
     }
@@ -42,6 +47,14 @@ public class Category {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public List<Quiz> getQuizzes() {
         return quizzes;
     }
@@ -49,6 +62,5 @@ public class Category {
     public void setQuizzes(List<Quiz> quizzes) {
         this.quizzes = quizzes;
     }
+
 }
-
-

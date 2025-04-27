@@ -3,6 +3,8 @@ package com.haagahelia.quizzer.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +47,7 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
+    @JsonBackReference
     private Category category;
 
     public Quiz() {
@@ -130,5 +133,12 @@ public class Quiz {
 
     public void setQuizId(Long quizId) {
         this.quizId = quizId;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public Category getCategory() {
+        return this.category;
     }
 }
