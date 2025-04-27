@@ -100,4 +100,10 @@ public class quizcontroller {
         return categoryService.addCategory(category);
     }
 
+    @DeleteMapping("/categories/{id}")
+    public void deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        System.out.println("Category with id " + id + " has been deleted.");
+    }
+
 }

@@ -61,16 +61,18 @@ export type Category = {
 }
 
 export type AddQuizProps = {
-    onAddQuiz: (quiz: {
+    onAddQuiz: (quizToAdd: {
         title: string;
         description: string;
         courseCode: string;
         publishedStatus: boolean;
         publishedDate: string;
         categoryId: number;
-        teacher: { teacherId: number }
+        teacher: { teacherId: number };
     }) => void;
-}
+    showFormControls: boolean;
+    onCancel?: () => void; // Added onCancel property
+};
 
 export type EditQuizProps = {
     quizId: string;

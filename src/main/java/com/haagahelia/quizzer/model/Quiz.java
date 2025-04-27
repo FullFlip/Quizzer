@@ -30,7 +30,7 @@ public class Quiz {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "code", nullable = false, updatable = false)
+    @Column(name = "code", nullable = false)
     private String courseCode;
 
     @Column(name = "published_status", nullable = false)
