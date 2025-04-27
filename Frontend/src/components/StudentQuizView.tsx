@@ -74,6 +74,38 @@ const StudentQuizView = () => {
                 To take this quiz, please contact your teacher for instructions.
               </p>
             </div>
+
+            {/* Questions Section */}
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Questions</h2>
+              <div className="space-y-6">
+                {quizData.questions.map((question, qIndex) => (
+                  <div key={question.id} className="bg-white border border-gray-200 rounded-lg shadow-md p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        Question {qIndex + 1}: {question.title}
+                      </h3>
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                        {question.difficulty}
+                      </span>
+                    </div>
+                    <div className="mt-4">
+                      <h4 className="text-lg font-medium text-gray-700 mb-2">Choices:</h4>
+                      <ul className="space-y-2">
+                        {question.choices.map((choice) => (
+                          <li 
+                            key={choice.choiceId} 
+                            className="p-3 rounded-md bg-gray-50 border border-gray-200"
+                          >
+                            {choice.description}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           <div className="text-center py-10 text-gray-500">
