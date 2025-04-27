@@ -1,20 +1,5 @@
 import React, { useState } from 'react';
-
-type EditQuizProps = {
-  quizId: string;
-  currentTitle: string;
-  currentDescription: string;
-  currentCourseCode: string;
-  currentPublishedStatus: boolean;
-  
-  onClose: () => void;
-  onSave: (updatedQuiz: {
-    title: string;
-    description: string;
-    courseCode: string;
-    publishedStatus: boolean;
-  }) => void;
-};
+import { EditQuizProps } from "../Types";
 
 const EditQuiz: React.FC<EditQuizProps> = ({
   quizId,
