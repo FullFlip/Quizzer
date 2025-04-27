@@ -16,7 +16,7 @@ const QuizList = () => {
     const [data, setData] = useState<QuizTypes[]>([]);
     const navigate = useNavigate();
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes/1", {
+        fetch("http://localhost:8080/quizzes/2", {
             method: "GET",
         })
             .then((response) => {

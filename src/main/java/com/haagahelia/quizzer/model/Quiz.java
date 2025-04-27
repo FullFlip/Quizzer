@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -138,7 +139,13 @@ public class Quiz {
     public void setCategory(Category category) {
         this.category = category;
     }
+
     public Category getCategory() {
         return this.category;
+    }
+
+    @JsonProperty("categoryId")
+    public Long getCategoryIdForJson() {
+        return category != null ? category.getCategoryId() : null;
     }
 }

@@ -24,7 +24,8 @@ public class QuizzerApplication {
     }
 
     @Bean
-    public CommandLineRunner demo(TeacherService teacherService, CategoryService categoryService, QuizOperationService quizOperationService) {
+    public CommandLineRunner demo(TeacherService teacherService, CategoryService categoryService,
+            QuizOperationService quizOperationService) {
         return (args) -> {
             // Choices for math and science questions
             Choice mathChoice1 = new Choice(true, "1");
@@ -85,32 +86,47 @@ public class QuizzerApplication {
             Category mathCategory = new Category();
             mathCategory.setTitle("Mathematics");
             mathCategory.setDescription("Category for all math-related quizzes");
-
             categoryService.addCategory(mathCategory);
-            quizOperationService.addQuiz(mathQuiz1); // Save the quiz with the category
 
             Category scienceCategory = new Category();
             scienceCategory.setTitle("Science");
             scienceCategory.setDescription("Category for all science-related quizzes");
-
             categoryService.addCategory(scienceCategory);
-            quizOperationService.addQuiz(scienceQuiz1); // Save the quiz with the category
 
             Category advancedMathCategory = new Category();
             advancedMathCategory.setTitle("Advanced Mathematics");
             advancedMathCategory.setDescription("Category for advanced math quizzes");
-
             categoryService.addCategory(advancedMathCategory);
-            mathQuiz2.setCategory(advancedMathCategory);
-            quizOperationService.addQuiz(mathQuiz2); // Save the quiz with the category
 
             Category physicsCategory = new Category();
             physicsCategory.setTitle("Physics");
             physicsCategory.setDescription("Category for physics quizzes");
             categoryService.addCategory(physicsCategory);
-            scienceQuiz3.setCategory(physicsCategory);
-            quizOperationService.addQuiz(scienceQuiz3); // Save the quiz with the category
 
+            // Assign categories to quizzes
+            // mathQuiz1 uses Mathematics category
+            mathQuiz1.setCategory(mathCategory);
+            quizOperationService.addQuiz(mathQuiz1);
+
+            // scienceQuiz1 uses Science category
+            scienceQuiz1.setCategory(scienceCategory);
+            quizOperationService.addQuiz(scienceQuiz1);
+
+            // mathQuiz2 uses Advanced Mathematics category
+            mathQuiz2.setCategory(advancedMathCategory);
+            quizOperationService.addQuiz(mathQuiz2);
+
+            // mathQuiz3 uses Mathematics category (again)
+            mathQuiz3.setCategory(mathCategory);
+            quizOperationService.addQuiz(mathQuiz3);
+
+            // scienceQuiz2 uses Science category (again)
+            scienceQuiz2.setCategory(scienceCategory);
+            quizOperationService.addQuiz(scienceQuiz2);
+
+            // scienceQuiz3 uses Physics category
+            scienceQuiz3.setCategory(physicsCategory);
+            quizOperationService.addQuiz(scienceQuiz3);
             teacherService.findAllTeachers().forEach(teacher -> {
                 System.out.println(teacher);
             });
