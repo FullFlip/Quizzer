@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddQuiz from './AddQuiz';
+import Categories from './Categories';
 
 type QuizTypes = {
     id: number;
@@ -17,7 +18,7 @@ const QuizList = () => {
     const navigate = useNavigate();
     
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes/1", {
+        fetch("http://localhost:8080/quizzes/2", {
             method: "GET",
         })
             .then((response) => {
@@ -103,12 +104,6 @@ const QuizList = () => {
                         >
                             Student View
                         </button>
-                        <button 
-                            onClick={() => setShowAddForm(!showAddForm)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
-                        >
-                            {showAddForm ? 'Cancel' : 'Add Quiz'}
-                        </button>
                     </div>
                 </div>
 
@@ -121,6 +116,8 @@ const QuizList = () => {
                         />
                     </div>
                 )}
+                <Categories />
+                <AddQuiz onAddQuiz={handleAddQuiz} />
 
                 <div className="grid grid-cols-1 gap-6">
                     {data.map((quiz) => (

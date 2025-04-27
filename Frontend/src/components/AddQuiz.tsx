@@ -1,24 +1,5 @@
 import React, { useState } from 'react';
-
-type QuizFormData = {
-    title: string;
-    description: string;
-    courseCode: string;
-    publishedStatus: boolean;
-}
-
-type AddQuizProps = {
-    onAddQuiz: (quiz: {
-        title: string;
-        description: string;
-        courseCode: string;
-        publishedStatus: boolean;
-        publishedDate: string;
-        teacher: { teacherId: number }
-    }) => void;
-    onCancel?: () => void;
-    showFormControls?: boolean;
-}
+import { QuizFormData, AddQuizProps } from "../Types";
 
 const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls = true }) => {
     const [showAddForm, setShowAddForm] = useState(false);

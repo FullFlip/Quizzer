@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
+import com.haagahelia.quizzer.services.CategoryService;
 import com.haagahelia.quizzer.services.QuestionOperationService;
 import com.haagahelia.quizzer.services.QuizOperationService;
 
 import jakarta.transaction.Transactional;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class quizcontroller {
 
@@ -29,31 +32,29 @@ public class quizcontroller {
     @Autowired
     private QuestionOperationService questionOperationService;
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
         return quizOperationService.getAllQuizzesByTeacher(id);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/quizzes/{id}/questions")
     public Quiz getQuestionsForQuiz(@PathVariable Long id) {
         return quizOperationService.getQuizWithQuestions(id);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody Quiz quiz) {
         return quizOperationService.addQuiz(quiz);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @PutMapping("/quizzes/{id}")
     public Quiz editQuiz(@PathVariable Long id, @RequestBody Quiz updatedQuiz) {
         return quizOperationService.editQuiz(id, updatedQuiz);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @Transactional
     @DeleteMapping("/quizzes/{id}")
     public void deleteQuiz(@PathVariable Long id) {
@@ -61,13 +62,11 @@ public class quizcontroller {
         System.out.println("Quiz with id " + id + " has been deleted.");
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/questions-with-choices")
     public Question addQuestionWithChoices(@RequestBody Question question, @RequestHeader("quizId") Long quizId) {
         return questionOperationService.addQuestionWithChoices(question, quizId);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/question/{id}")
     public void deleteQuestionWithId(@PathVariable("id") Long questionId) {
         if (questionId == null) {
@@ -76,10 +75,9 @@ public class quizcontroller {
         questionOperationService.deleteQuestionWithId(questionId);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @PutMapping("/question/{id}")
     public void updateQuestionWithId(@PathVariable("id") Long questionId, @RequestBody Question question) {
-    
+
         if (question == null) {
             throw new IllegalArgumentException("Provided question was null");
         }
@@ -89,4 +87,16 @@ public class quizcontroller {
         }
         questionOperationService.updateQuestion(questionId, question);
     }
+
+    // Get all categories
+    @GetMapping("/categories")
+    public List<Category> getAllCategories() {
+        return categoryService.getAllCategories();
+    }
+
+    @PostMapping("/categories")
+    public Category addCategory(@RequestBody Category category) {
+        return categoryService.addCategory(category);
+    }
+
 }

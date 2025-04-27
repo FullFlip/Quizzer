@@ -46,3 +46,37 @@ export type QuestionProps = {
         }[];
     };
 };
+
+export type QuizFormData = {
+    title: string;
+    description: string;
+    courseCode: string;
+    publishedStatus: boolean;
+}
+
+export type AddQuizProps = {
+    onAddQuiz: (quiz: {
+        title: string;
+        description: string;
+        courseCode: string;
+        publishedStatus: boolean;
+        publishedDate: string;
+        teacher: { teacherId: number }
+    }) => void;
+}
+
+export type EditQuizProps = {
+    quizId: string;
+    currentTitle: string;
+    currentDescription: string;
+    currentCourseCode: string;
+    currentPublishedStatus: boolean;
+    
+    onClose: () => void;
+    onSave: (updatedQuiz: {
+      title: string;
+      description: string;
+      courseCode: string;
+      publishedStatus: boolean;
+    }) => void;
+  };
