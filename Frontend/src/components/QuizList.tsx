@@ -13,7 +13,9 @@ type QuizTypes = {
 
 const QuizList = () => {
     const [data, setData] = useState<QuizTypes[]>([]);
+    const [showAddForm, setShowAddForm] = useState(false);
     const navigate = useNavigate();
+    
     const fetchData = () => {
         fetch("http://localhost:8080/quizzes/1", {
             method: "GET",
@@ -82,6 +84,7 @@ const QuizList = () => {
             .then((createdQuiz) => {
                 console.log("Quiz created:", createdQuiz);
                 setData([...data, createdQuiz]);
+                setShowAddForm(false);
             })
             .catch((error) => {
                 console.error("Error creating quiz:", error);
@@ -89,9 +92,35 @@ const QuizList = () => {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen p-6" >
+        <div className="bg-gray-100 min-h-screen p-6">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
-                <AddQuiz onAddQuiz={handleAddQuiz} />
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-4xl font-bold text-gray-800">Quizzes</h1>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={() => navigate('/student')}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
+                        >
+                            Student View
+                        </button>
+                        <button 
+                            onClick={() => setShowAddForm(!showAddForm)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
+                        >
+                            {showAddForm ? 'Cancel' : 'Add Quiz'}
+                        </button>
+                    </div>
+                </div>
+
+                {showAddForm && (
+                    <div className="bg-gray-50 p-4 rounded-lg shadow mb-6">
+                        <AddQuiz 
+                            onAddQuiz={handleAddQuiz} 
+                            onCancel={() => setShowAddForm(false)}
+                            showFormControls={false}
+                        />
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 gap-6">
                     {data.map((quiz) => (
@@ -120,7 +149,8 @@ const QuizList = () => {
                                 <button
                                     className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
                                     onClick={(event) => {
-                                        event.stopPropagation(); if (window.confirm(`Are you sure you want to delete the quiz "${quiz.title}"?`)) {
+                                        event.stopPropagation(); 
+                                        if (window.confirm(`Are you sure you want to delete the quiz "${quiz.title}"?`)) {
                                             handleDelete(quiz.id);
                                         }
                                     }}
