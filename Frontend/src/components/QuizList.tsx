@@ -18,7 +18,7 @@ const QuizList = () => {
     const navigate = useNavigate();
     
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes/2", {
+        fetch("http://localhost:8080/quizzes/1", {
             method: "GET",
         })
             .then((response) => {
