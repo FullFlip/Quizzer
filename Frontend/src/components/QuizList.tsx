@@ -139,7 +139,7 @@ const QuizList = () => {
                             </div>
                             <p className="text-lg mb-2">{quiz.description}</p>
                             <div className="flex justify-between items-center text-sm mb-4">
-                                <p className="font-medium">Course Code: {quiz.courseCode}</p>
+                                <p className="font-medium">Course Code:  {quiz.courseCode}</p>
                                 <p className="font-medium">Added On: {quiz.publishedDate}</p>
                             </div>
                             <div className="flex justify-end">

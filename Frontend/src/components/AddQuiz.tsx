@@ -28,8 +28,8 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
     const handleAddQuizSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (!newQuiz.title || !newQuiz.description || !newQuiz.courseCode) {
-            alert("Please fill out all fields");
+        if (!newQuiz.title || !newQuiz.description) {
+            alert("Please fill out title and description");
             return;
         }
         
@@ -80,7 +80,7 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
                 <form onSubmit={handleAddQuizSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                            Title
+                            *Title
                         </label>
                         <input
                             type="text"
@@ -94,7 +94,7 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
                     </div>
                     <div>
                         <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                            Description
+                            *Description
                         </label>
                         <textarea
                             id="description"
@@ -117,7 +117,7 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
                             value={newQuiz.courseCode}
                             onChange={handleInputChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter course code"
+                            placeholder="Enter course code if you already know the course code"
                         />
                     </div>
                     <div className="flex items-center">
