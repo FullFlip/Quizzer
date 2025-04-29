@@ -63,6 +63,7 @@ export type QuizFormData = {
 export type Category = {
     categoryId: number;
     title: string;
+    description: string;
 }
 
 export type AddQuizProps = {
