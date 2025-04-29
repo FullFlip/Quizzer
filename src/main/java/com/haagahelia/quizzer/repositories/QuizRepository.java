@@ -18,4 +18,5 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Query("DELETE FROM Quiz q WHERE q.id = :id")
     void deleteQuizById(Long id);
 
+    List<Quiz> findByPublishedStatus(boolean publishedStatus);
 }

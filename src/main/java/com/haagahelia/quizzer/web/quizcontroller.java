@@ -46,6 +46,11 @@ public class quizcontroller {
         return quizOperationService.getQuizWithQuestions(id);
     }
 
+    @GetMapping("/quizzes/published")
+    public List<Quiz> getPublishedQuizzes() {
+        return quizOperationService.getPublishedQuizzes();
+    }
+
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody QuizDto quiz) {
         return quizOperationService.addQuizDto(quiz);

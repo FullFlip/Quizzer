@@ -60,6 +60,10 @@ public class QuizOperationService {
         return quiz;
     }
 
+    public List<Quiz> getPublishedQuizzes() {
+        return quizRepository.findByPublishedStatus(true);
+    }
+
     public Quiz addQuiz(Quiz quiz) {
         if (quiz == null) {
             throw new IllegalArgumentException("Quiz data is not provided or is invalid.");

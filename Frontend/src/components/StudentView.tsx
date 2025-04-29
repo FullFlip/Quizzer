@@ -13,7 +13,7 @@ const StudentView = () => {
 
   const fetchPublishedQuizzes = () => {
     setIsLoading(true);
-    fetch("http://localhost:8080/quizzes/1", {
+    fetch("http://localhost:8080/quizzes/published", {
       method: "GET",
     })
       .then((response) => {
@@ -23,9 +23,9 @@ const StudentView = () => {
         return response.json();
       })
       .then((data) => {
-        // Filter only published quizzes
-        const publishedOnly = data.filter((quiz: QuizTypes) => quiz.publishedStatus);
-        setPublishedQuizzes(publishedOnly);
+        console.log(data);
+        
+        setPublishedQuizzes(data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -34,7 +34,7 @@ const StudentView = () => {
       });
   };
 
-  const handleQuizClick = (quizId: number) => {
+  const handleQuizClick = (quizId: number | undefined) => {
     navigate(`/student/quiz/${quizId}`);
   };
 
