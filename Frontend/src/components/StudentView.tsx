@@ -5,7 +5,7 @@ import { Category, QuizTypes } from '../Types';
 const StudentView = () => {
   const [publishedQuizzes, setPublishedQuizzes] = useState<QuizTypes[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'quizzes' | 'categories'>('categories');
+  const [activeTab, setActiveTab] = useState<'quizzes' | 'categories'>('quizzes');
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
 
@@ -104,7 +104,7 @@ const StudentView = () => {
                 {publishedQuizzes.map((quiz) => (
                   <div
                     key={quiz.quizId}
-                    onClick={() => handleQuizClick(quiz.quizId)}
+                    onClick={() => handleQuizClick(quiz.id)}
                     className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform hover:-translate-y-1 cursor-pointer"
                   >
                     <h2 className="text-xl font-semibold mb-2">{quiz.title}</h2>
