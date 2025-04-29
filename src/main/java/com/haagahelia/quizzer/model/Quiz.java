@@ -50,7 +50,7 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
-    @JsonIgnoreProperties("quizzes")  // Replace @JsonBackReference with this
+    //@JsonIgnoreProperties("quizzes")  // Replace @JsonBackReference with this
     private Category category;
 
     public Quiz() {

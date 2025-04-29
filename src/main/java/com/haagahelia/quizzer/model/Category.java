@@ -27,7 +27,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    // @JsonManagedReference
     private List<Quiz> quizzes = new ArrayList<>();
 
     // Getters and setters
