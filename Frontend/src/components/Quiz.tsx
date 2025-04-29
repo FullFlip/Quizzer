@@ -144,6 +144,11 @@ const Quiz = () => {
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Description:</span> {data?.description}
         </p>
+        {data?.category && (
+          <p className="text-lg text-gray-600 mb-2">
+            <span className="font-semibold">Category:</span> {data.category.title}
+          </p>
+        )}
         <div className="text-lg text-gray-600 mb-6 flex items-center">
           <span className="font-semibold mr-2">Status:</span>
           <span

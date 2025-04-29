@@ -5,6 +5,11 @@ export type QuizTypes = {
     courseCode: string;
     publishedStatus?: boolean;
     publishedDate?: string;
+    category?:{
+        categoryId: number;
+        title: string;
+        description?: string;
+    };
     questions: {
         id: number;
         title: string;

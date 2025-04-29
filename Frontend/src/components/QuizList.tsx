@@ -10,6 +10,11 @@ type QuizTypes = {
     courseCode: string;
     publishedStatus: boolean;
     publishedDate: string;
+    category?: {
+        categoryId: number;
+        title: string;
+        description?: string;
+    };
 }
 
 const QuizList = () => {
@@ -140,7 +145,12 @@ const QuizList = () => {
                             </div>
                             <p className="text-lg mb-2">{quiz.description}</p>
                             <div className="flex justify-between items-center text-sm mb-4">
-                                <p className="font-medium">Course Code:  {quiz.courseCode}</p>
+                                <div>
+                                    <p className="font-medium">Course Code: {quiz.courseCode}</p>
+                                    {quiz.category && (
+                                        <p className="font-medium mt-1">Category: {quiz.category.title}</p>
+                                    )}
+                                </div>
                                 <p className="font-medium">Added On: {quiz.publishedDate}</p>
                             </div>
                             <div className="flex justify-end">

@@ -1,9 +1,11 @@
 package com.haagahelia.quizzer.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -48,7 +50,7 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
-    @JsonBackReference
+    @JsonIgnoreProperties("quizzes")  // Replace @JsonBackReference with this
     private Category category;
 
     public Quiz() {
@@ -147,5 +149,17 @@ public class Quiz {
     @JsonProperty("categoryId")
     public Long getCategoryIdForJson() {
         return category != null ? category.getCategoryId() : null;
+    }
+
+    @JsonProperty("category")
+    public Map<String, Object> getCategoryForJson() {
+        if (category == null) {
+            return null;
+        }
+        Map<String, Object> categoryMap = new HashMap<>();
+        categoryMap.put("categoryId", category.getCategoryId());
+        categoryMap.put("title", category.getTitle());
+        categoryMap.put("description", category.getDescription());
+        return categoryMap;
     }
 }
