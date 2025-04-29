@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QuizTypes } from '../Types';
+import { Category, QuizTypes } from '../Types';
 
 const StudentView = () => {
   const [publishedQuizzes, setPublishedQuizzes] = useState<QuizTypes[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'quizzes' | 'categories'>('categories');
+  const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPublishedQuizzes();
-  }, []);
+    if (activeTab === 'quizzes') {
+      fetchPublishedQuizzes();
+    } else if (activeTab === 'categories') {
+      fetchCategories();
+    }
+  }, [activeTab]);
 
   const fetchPublishedQuizzes = () => {
     setIsLoading(true);
@@ -23,8 +29,6 @@ const StudentView = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-        
         setPublishedQuizzes(data);
         setIsLoading(false);
       })
@@ -32,6 +36,19 @@ const StudentView = () => {
         console.error("Error fetching published quizzes:", error);
         setIsLoading(false);
       });
+  };
+
+  const fetchCategories = () => {
+    fetch("http://localhost:8080/categories", {
+      method: "GET",
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    }).then((data) => {
+      setCategories(data);
+    })
   };
 
   const handleQuizClick = (quizId: number | undefined) => {
@@ -44,41 +61,78 @@ const StudentView = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
-      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-4xl font-bold text-gray-800">Available Quizzes</h1>
-          <button
-            onClick={handleSwitchToTeacherView}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
-          >
-            Switch to Teacher View
-          </button>
-        </div>
+      <div className="w-full flex justify-center mb-6">
+        <button
+          className={`p-2 mx-2 text-white font-medium rounded-lg ${activeTab === 'quizzes' ? 'bg-blue-600' : 'bg-gray-400'
+            }`}
+          onClick={() => setActiveTab('quizzes')}
+        >
+          Quizzes
+        </button>
+        <button
+          className={`p-2 mx-2 text-white font-medium rounded-lg ${activeTab === 'categories' ? 'bg-blue-600' : 'bg-gray-400'
+            }`}
+          onClick={() => setActiveTab('categories')}
+        >
+          Categories
+        </button>
+      </div>
 
-        {isLoading ? (
-          <div className="flex justify-center p-10">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        ) : publishedQuizzes.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
-            <p className="text-lg">No published quizzes available at the moment.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {publishedQuizzes.map((quiz) => (
-              <div
-                key={quiz.id}
-                onClick={() => handleQuizClick(quiz.id)}
-                className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform hover:-translate-y-1 cursor-pointer"
+      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        {activeTab === 'quizzes' && (
+          <>
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-4xl font-bold text-gray-800">Available Quizzes</h1>
+              <button
+                onClick={handleSwitchToTeacherView}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
               >
-                <h2 className="text-xl font-semibold mb-2">{quiz.title}</h2>
-                <p className="text-sm mb-3">{quiz.description}</p>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="bg-blue-800 px-2 py-1 rounded">{quiz.courseCode}</span>
-                  <span>Published: {quiz.publishedDate}</span>
-                </div>
+                Switch to Teacher View
+              </button>
+            </div>
+
+            {isLoading ? (
+              <div className="flex justify-center p-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
               </div>
-            ))}
+            ) : publishedQuizzes.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">
+                <p className="text-lg">No published quizzes available at the moment.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {publishedQuizzes.map((quiz) => (
+                  <div
+                    key={quiz.quizId}
+                    onClick={() => handleQuizClick(quiz.quizId)}
+                    className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform hover:-translate-y-1 cursor-pointer"
+                  >
+                    <h2 className="text-xl font-semibold mb-2">{quiz.title}</h2>
+                    <p className="text-sm mb-3">{quiz.description}</p>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="bg-blue-800 px-2 py-1 rounded">{quiz.courseCode}</span>
+                      <span>Published: {quiz.publishedDate}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === 'categories' && (
+          <div>
+            <h1 className="text-4xl font-bold text-gray-800 mb-6">Categories</h1>
+            <div className="block w-full gap-6">
+              {categories.map((category) => (
+                <div key={category.categoryId}
+                  className=" flex items-center my-2 justify-start border-b-blue-100 border-b-2 text-pretty"
+                >
+                  <h2 className="text-xl w-2/6 font-semibold mb-2">{category.title}</h2>
+                  <p className="text-sm w-4/6">{category.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
