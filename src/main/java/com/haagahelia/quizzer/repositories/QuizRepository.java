@@ -19,4 +19,6 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     void deleteQuizById(Long id);
 
     List<Quiz> findByPublishedStatus(boolean publishedStatus);
+
+    List<Quiz> findByCategory_Title(String title);
 }

@@ -50,6 +50,10 @@ public class quizcontroller {
     public List<Quiz> getPublishedQuizzes() {
         return quizOperationService.getPublishedQuizzes();
     }
+    @GetMapping("/quizzes/categories/{category}")
+    public List<Quiz> getQuizzesByCategory(@PathVariable String category) {
+        return quizOperationService.getQuizzesByCategory(category);
+    }
 
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody QuizDto quiz) {

@@ -118,4 +118,11 @@ public class QuizOperationService {
         questionRepository.deleteAllInBatch(questions);
         quizRepository.deleteQuizById(quizId);
     }
+
+    public List<Quiz> getQuizzesByCategory(String category) {
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("Category is not provided or is invalid.");
+        }
+        return quizRepository.findByCategory_Title(category);
+    }
 }
