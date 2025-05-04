@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Category, QuizTypes } from '../Types';
+import QuizCard from './QuizCard';
 
 const StudentView = () => {
   const [publishedQuizzes, setPublishedQuizzes] = useState<QuizTypes[]>([]);
@@ -100,22 +101,7 @@ const StudentView = () => {
                 <p className="text-lg">No published quizzes available at the moment.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {publishedQuizzes.map((quiz) => (
-                  <div
-                    key={quiz.quizId}
-                    onClick={() => handleQuizClick(quiz.id)}
-                    className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-lg shadow-md hover:shadow-lg transform transition-transform hover:-translate-y-1 cursor-pointer"
-                  >
-                    <h2 className="text-xl font-semibold mb-2">{quiz.title}</h2>
-                    <p className="text-sm mb-3">{quiz.description}</p>
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="bg-blue-800 px-2 py-1 rounded">{quiz.courseCode}</span>
-                      <span>Published: {quiz.publishedDate}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <QuizCard quizzes={publishedQuizzes} handleQuizClick={handleQuizClick}/>
             )}
           </>
         )}
@@ -128,7 +114,12 @@ const StudentView = () => {
                 <div key={category.categoryId}
                   className=" flex items-center my-2 justify-start border-b-blue-100 border-b-2 text-pretty"
                 >
-                  <h2 className="text-xl w-2/6 font-semibold mb-2">{category.title}</h2>
+                  <h2
+                    className="text-xl w-2/6 font-semibold mb-2 text-blue-600 hover:underline cursor-pointer"
+                    onClick={() => navigate(`/quizzes/categories/${category.title}`)}
+                  >
+                    {category.title}
+                  </h2>
                   <p className="text-sm w-4/6">{category.description}</p>
                 </div>
               ))}

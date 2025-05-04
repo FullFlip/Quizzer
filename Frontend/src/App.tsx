@@ -4,6 +4,7 @@ import QuizList from './components/QuizList';
 import Quiz from './components/Quiz';
 import StudentView from './components/StudentView';
 import StudentQuizView from './components/StudentQuizView';
+import QuizByCategory from './components/QuizByCategory';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Route path="/quiz/:quizId" element={<Quiz />} />
       <Route path="/student" element={<StudentView />} />
       <Route path="/student/quiz/:quizId" element={<StudentQuizView />} />
+      <Route path="/quizzes/categories/:category" element={<QuizByCategory />} />
     </Routes>
   );
 };

@@ -5,7 +5,7 @@ export type QuizTypes = {
     courseCode: string;
     publishedStatus?: boolean;
     publishedDate?: string;
-    category?:{
+    category?: {
         categoryId: number;
         title: string;
         description?: string;
@@ -77,7 +77,7 @@ export type AddQuizProps = {
         teacher: { teacherId: number };
     }) => void;
     showFormControls: boolean;
-    onCancel?: () => void; // Added onCancel property
+    onCancel?: () => void;
 };
 
 export type EditQuizProps = {
@@ -95,3 +95,8 @@ export type EditQuizProps = {
         publishedStatus: boolean;
     }) => void;
 };
+
+export type QuizCardProps = {
+    quizzes: QuizTypes[];
+    handleQuizClick: (quizId: number | undefined) => void;
+}
