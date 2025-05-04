@@ -108,8 +108,15 @@ const QuizList = () => {
 
 
     const handleCategorySelect = (categoryId: number | null) => {
+        const quizzesInCategory = data.filter((quiz) => quiz.categoryId === categoryId);
+
+        if (categoryId !== null && quizzesInCategory.length === 0) {
+            alert("No quizzes found in the selected category.");
+            return;
+        }
+
         setSelectedCategoryId(categoryId);
-        setActiveTab('quizzes'); // Switch back to the "Quizzes" tab
+        setActiveTab('quizzes');
     };
 
     return (
@@ -206,7 +213,8 @@ const QuizList = () => {
                 )}
 
                 {activeTab === 'categories' && (
-                    <Categories onCategorySelect={handleCategorySelect} />
+                    
+                <Categories onCategorySelect={handleCategorySelect} />
                 )}
             </div>
         </div>

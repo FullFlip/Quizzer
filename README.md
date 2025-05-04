@@ -1,19 +1,34 @@
-# Quizzer
-## Description
-Working as a four man team in a project called Quizzer. The project lasts 6 weeks so three two week Sprints.
+# Description
+Working as a four man team in a project called Quizzer. The project lasts six weeks so three two week Sprints. In releases there is a release for each Sprint. 
 
-**More about the project**
+Quizzer is a full-stack web application for creating, managing, and taking quizzes. It features a React + TypeScript frontend with Tailwind CSS for styling, and a Java Spring Boot backend with a REST API and H2 database. Teachers can create, edit, categorize, and publish quizzes, while students can browse and complete published quizzes by category.
 
-### Team members
+# Team members
 * [Jarno Ryhänen](https://github.com/JarnoRyhanen)
 * [Matti Pohjanoksa](https://github.com/MatPohj)
 * [Valtteri Vuokila](https://github.com/Valheri)
 * [Ville Stolt](https://github.com/Vsto99)
   
-### Backlog
+# Backlog
 [Link to the Backlog](https://github.com/orgs/FullFlip/projects/1)
 
-### Data diagram
+# Technologies used in this project
+## Backend
+- Programming Language: Java ( 17 ) 
+- Framework: Spring boot
+- In development H2 Database
+- In production xx
+## Frontend
+- Programming Language: TypeScript
+- Framework: React
+- Build Tool: Vite
+- Styling: Tailwind CSS
+  
+Major Libraries used in the Frontend:
+   - React Router Dom
+   - Tailwind
+
+# Data diagram
 ```mermaid
 classDiagram
 direction LR
@@ -53,8 +68,8 @@ Question "1"    -- "1..*" Choice
 Choice   "1"    -- "0..*" Answer
 
 ```
-### Instructions
-#### Basic setup
+# Instructions
+## Basic setup
 1. Clone the repository
  ```
 git clone https://github.com/FullFlip/Quizzer.git

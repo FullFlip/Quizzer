@@ -27,7 +27,6 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
                 return response.json();
             })
             .then((data) => {
-                console.log(data);
                 setCategories(data);
             })
             .catch((error) => {
@@ -36,8 +35,21 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
     };
 
     const handleAddCategory = () => {
-        if (!newCategoryName.trim()) return;
+        if (!newCategoryName.trim()) {
+            alert("Category name cannot be empty.");
+            return;
+        }
 
+
+        const duplicateCategory = categories.find(
+            (category) => category.title.toLowerCase() === newCategoryName.toLowerCase()
+        );
+    
+        if (duplicateCategory) {
+            alert("A category with this name already exists.");
+            return;
+        }
+    
         fetch("http://localhost:8080/categories", {
             method: "POST",
             headers: {
@@ -80,7 +92,7 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
     };
 
     const handleCategoryClick = (categoryId: number | null) => {
-        const newSelectedCategoryId = selectedCategoryId === categoryId ? null : categoryId;
+        const newSelectedCategoryId =  categoryId;
         setSelectedCategoryId(newSelectedCategoryId);
         onCategorySelect(newSelectedCategoryId); // Pass the selected categoryId to the parent
     };
@@ -95,9 +107,7 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
             <ul className="mb-4">
                 {/* "All" Button */}
                 <li
-                    className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer ${
-                        selectedCategoryId === null ? "font-bold" : ""
-                    }`}
+                    className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer`}
                     onClick={() => handleCategoryClick(null)} // Clear the selected category
                 >
                     <span>All</span>
