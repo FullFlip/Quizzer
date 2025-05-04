@@ -78,9 +78,11 @@ const EditQuiz: React.FC<EditQuizProps> = ({
         setQuizData(updatedData);
         onClose();
       })
+      .then(() => window.location.reload())
       .catch((error) => {
         console.error('Error updating quiz:', error);
       });
+      
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
