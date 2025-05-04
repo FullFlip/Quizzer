@@ -38,6 +38,7 @@ const QuizList = () => {
             })
             .then((data) => {
                 setData(data);
+
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -119,6 +120,10 @@ const QuizList = () => {
         setActiveTab('quizzes');
     };
 
+    const selectedCategoryTitle = selectedCategoryId
+    ? `Quizzes in category: ${data.find((quiz) => quiz.categoryId === selectedCategoryId)?.category?.title || "Unknown"}`
+    : "All Quizzes";
+
     return (
         <div className="bg-gray-100 min-h-screen p-6">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
@@ -155,6 +160,9 @@ const QuizList = () => {
                 {/* Conditional Rendering Based on Active Tab */}
                 {activeTab === 'quizzes' && (
                     <>
+                        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+                            {selectedCategoryTitle}
+                        </h2>
                         {showAddForm && (
                             <div className="bg-gray-50 p-4 rounded-lg shadow mb-6">
                                 <AddQuiz
@@ -213,8 +221,8 @@ const QuizList = () => {
                 )}
 
                 {activeTab === 'categories' && (
-                    
-                <Categories onCategorySelect={handleCategorySelect} />
+
+                    <Categories onCategorySelect={handleCategorySelect} selectedCategoryId={selectedCategoryId} />
                 )}
             </div>
         </div>

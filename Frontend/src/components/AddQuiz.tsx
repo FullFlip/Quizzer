@@ -83,7 +83,6 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-4xl font-bold text-gray-800">Quizzes</h1>
                 <button
                     onClick={() => setShowAddForm(!showAddForm)}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"

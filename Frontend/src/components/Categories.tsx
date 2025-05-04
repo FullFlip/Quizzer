@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 
 type CategoryType = {
-    categoryId: number; // Updated to match the backend's property name
-    title: string;      // Updated to match the backend's property name
-    description?: string; // Updated to match the backend's property name
+    categoryId: number;
+    title: string;
+    description?: string;
 };
 
 type CategoriesProps = {
     onCategorySelect: (categoryId: number | null) => void; // New prop to pass selected categoryId
+    selectedCategoryId: number | null;
 };
 
-const Categories = ({ onCategorySelect }: CategoriesProps) => {
+const Categories = ({ onCategorySelect, selectedCategoryId }: CategoriesProps) => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
     const fetchCategories = () => {
         fetch(`http://localhost:8080/categories`, {
@@ -44,12 +44,12 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
         const duplicateCategory = categories.find(
             (category) => category.title.toLowerCase() === newCategoryName.toLowerCase()
         );
-    
+
         if (duplicateCategory) {
             alert("A category with this name already exists.");
             return;
         }
-    
+
         fetch("http://localhost:8080/categories", {
             method: "POST",
             headers: {
@@ -77,6 +77,11 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
     };
 
     const handleDeleteCategory = (categoryId: number) => {
+        const confirmDeletion = window.confirm("Are you sure you want to save changes to this quiz?");
+        if (!confirmDeletion) {
+            return; // Exit if the user cancels
+        }
+
         fetch(`http://localhost:8080/categories/${categoryId}`, {
             method: "DELETE",
         })
@@ -92,9 +97,7 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
     };
 
     const handleCategoryClick = (categoryId: number | null) => {
-        const newSelectedCategoryId =  categoryId;
-        setSelectedCategoryId(newSelectedCategoryId);
-        onCategorySelect(newSelectedCategoryId); // Pass the selected categoryId to the parent
+        onCategorySelect(categoryId); // Pass the selected categoryId to the parent
     };
 
     useEffect(() => {
@@ -103,7 +106,12 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
 
     return (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Categories</h2>
+            <h2 className="text-xl font-semibold mb-4">
+            {selectedCategoryId === null
+                ? "Categories"
+                : `Category selected: ${categories.find(cat => cat.categoryId === selectedCategoryId)?.title || "Unknown"}`
+            }
+        </h2>
             <ul className="mb-4">
                 {/* "All" Button */}
                 <li
@@ -115,9 +123,8 @@ const Categories = ({ onCategorySelect }: CategoriesProps) => {
                 {categories.map((category) => (
                     <li
                         key={category.categoryId}
-                        className={`flex items-center gap-4 my-2 p-4 border-b border-gray-200 rounded-lg ${
-                            selectedCategoryId === category.categoryId ? "bg-blue-100" : "bg-white"
-                        }`}
+                        className={`flex items-center gap-4 my-2 p-4 border-b border-gray-200 rounded-lg ${selectedCategoryId === category.categoryId ? "bg-blue-100" : "bg-white"
+                            }`}
                     >
                         <button
                             onClick={(e) => {
