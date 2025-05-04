@@ -3,14 +3,18 @@ import { useEffect, useState } from 'react';
 type CategoryType = {
     categoryId: number; // Updated to match the backend's property name
     title: string;      // Updated to match the backend's property name
+    description?: string; // Updated to match the backend's property name
 };
 
+type CategoriesProps = {
+    onCategorySelect: (categoryId: number | null) => void; // New prop to pass selected categoryId
+};
 
-
-const Categories = () => {
+const Categories = ({ onCategorySelect }: CategoriesProps) => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
     const fetchCategories = () => {
         fetch(`http://localhost:8080/categories`, {
@@ -60,7 +64,6 @@ const Categories = () => {
             });
     };
 
-    // New: Handle category deletion
     const handleDeleteCategory = (categoryId: number) => {
         fetch(`http://localhost:8080/categories/${categoryId}`, {
             method: "DELETE",
@@ -69,7 +72,6 @@ const Categories = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                // Update state after deletion
                 setCategories(categories.filter(category => category.categoryId !== categoryId));
             })
             .catch((error) => {
@@ -77,8 +79,11 @@ const Categories = () => {
             });
     };
 
-
-
+    const handleCategoryClick = (categoryId: number | null) => {
+        const newSelectedCategoryId = selectedCategoryId === categoryId ? null : categoryId;
+        setSelectedCategoryId(newSelectedCategoryId);
+        onCategorySelect(newSelectedCategoryId); // Pass the selected categoryId to the parent
+    };
 
     useEffect(() => {
         fetchCategories();
@@ -88,15 +93,40 @@ const Categories = () => {
         <div className="bg-gray-100 p-4 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Categories</h2>
             <ul className="mb-4">
+                {/* "All" Button */}
+                <li
+                    className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer ${
+                        selectedCategoryId === null ? "font-bold" : ""
+                    }`}
+                    onClick={() => handleCategoryClick(null)} // Clear the selected category
+                >
+                    <span>All</span>
+                </li>
                 {categories.map((category) => (
-                    <li key={category.categoryId} className="flex items-center gap-4 text-lg">
+                    <li
+                        key={category.categoryId}
+                        className={`flex items-center gap-4 my-2 p-4 border-b border-gray-200 rounded-lg ${
+                            selectedCategoryId === category.categoryId ? "bg-blue-100" : "bg-white"
+                        }`}
+                    >
                         <button
-                            onClick={() => handleDeleteCategory(category.categoryId)}
-                            className="bg-red-500 text-white px-4 my-1 rounded hover:bg-red-600"
+                            onClick={(e) => {
+                                e.stopPropagation(); // Prevent triggering category selection
+                                handleDeleteCategory(category.categoryId);
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                         >
                             Delete
                         </button>
-                        <span>{category.title}</span>
+                        <div
+                            className="flex-1 cursor-pointer"
+                            onClick={() => handleCategoryClick(category.categoryId)}
+                        >
+                            <h2 className="text-xl font-semibold text-blue-600 hover:underline">
+                                {category.title}
+                            </h2>
+                            <p className="text-sm text-gray-600">{category.description}</p>
+                        </div>
                     </li>
                 ))}
             </ul>
