@@ -1,6 +1,8 @@
 package com.haagahelia.quizzer.web;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.haagahelia.quizzer.dto.AnswerDto;
 import com.haagahelia.quizzer.dto.QuizDto;
+import com.haagahelia.quizzer.model.Answer;
 import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
+import com.haagahelia.quizzer.services.AnswerService;
 import com.haagahelia.quizzer.services.CategoryService;
 import com.haagahelia.quizzer.services.QuestionOperationService;
 import com.haagahelia.quizzer.services.QuizOperationService;
@@ -36,6 +41,9 @@ public class quizcontroller {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private AnswerService answerService;
+
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
         return quizOperationService.getAllQuizzesByTeacher(id);
@@ -50,6 +58,7 @@ public class quizcontroller {
     public List<Quiz> getPublishedQuizzes() {
         return quizOperationService.getPublishedQuizzes();
     }
+
     @GetMapping("/quizzes/categories/{category}")
     public List<Quiz> getQuizzesByCategory(@PathVariable String category) {
         return quizOperationService.getQuizzesByCategory(category);
@@ -115,4 +124,12 @@ public class quizcontroller {
         System.out.println("Category with id " + id + " has been deleted.");
     }
 
+    @PostMapping("/answers/{quizId}")
+    public Map<String, String> submitAnswer(@PathVariable Long quizId, @RequestBody AnswerDto answer) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Answers submitted successfully.");
+        response.put("quizId", quizId.toString());
+        answerService.addAnswer(quizId, answer);
+        return response;
+    }
 }

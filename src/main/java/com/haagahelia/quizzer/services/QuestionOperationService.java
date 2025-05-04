@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.haagahelia.quizzer.model.Answer;
 import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
+import com.haagahelia.quizzer.repositories.AnswerRepository;
 import com.haagahelia.quizzer.repositories.ChoiceRepository;
 import com.haagahelia.quizzer.repositories.QuestionRepository;
 import com.haagahelia.quizzer.repositories.QuizRepository;
@@ -23,7 +25,7 @@ public class QuestionOperationService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private ChoiceRepository choiceRepository;
+    private AnswerRepository answerRepository; // Add AnswerRepository
 
     public Question addQuestionWithChoices(Question question, Long quizId) {
         if (question == null || question.getChoices() == null) {
@@ -44,7 +46,8 @@ public class QuestionOperationService {
         }
         question.setChoices(managedChoices);
 
-        return questionRepository.save(question);
+        Question savedQuestion = questionRepository.save(question);
+        return savedQuestion;
     }
 
     public void deleteQuestionWithId(Long id) {

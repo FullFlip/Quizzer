@@ -53,31 +53,54 @@ const StudentQuizView = () => {
   const handleQuizSubmit = (answers: Record<number, number>) => {
     // Calculate results
     let correctCount = 0;
-    
+
     if (quizData) {
-      quizData.questions.forEach(question => {
+      quizData.questions.forEach((question) => {
         const selectedChoiceId = answers[question.id];
-        const selectedChoice = question.choices.find(c => c.choiceId === selectedChoiceId);
+        const selectedChoice = question.choices.find((c) => c.choiceId === selectedChoiceId);
         if (selectedChoice && selectedChoice.true) {
           correctCount++;
         }
       });
-      
+
       // Save results
       const results = {
         answers,
         correctCount,
-        totalQuestions: quizData.questions.length
+        totalQuestions: quizData.questions.length,
       };
-      
-      // Save to localStorage or you could send to your backend API
+
+      // Save to localStorage
       localStorage.setItem(`quiz_results_${quizId}`, JSON.stringify(results));
+
+      console.log(results);
       
+      // Submit answers to the backend
+      fetch(`http://localhost:8080/answers/${quizId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(results),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Answers submitted successfully:", data);
+        })
+        .catch((error) => {
+          console.error("Error submitting answers:", error);
+        });
+
       setQuizResults(results);
       setIsSubmitted(true);
     }
-    
-    console.log('Quiz submitted with answers:', answers);
+
+    console.log("Quiz submitted with answers:", answers);
   };
 
   if (isLoading) {
@@ -111,7 +134,7 @@ const StudentQuizView = () => {
                 <span>This quiz has {quizData.questions.length} questions</span>
               </div>
             </div>
-            
+
             {!isSubmitted ? (
               <>
                 <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
@@ -122,15 +145,15 @@ const StudentQuizView = () => {
                 </div>
 
                 {/* QuizForm Component */}
-                <QuizForm 
-                  quizData={quizData} 
-                  onSubmit={handleQuizSubmit} 
+                <QuizForm
+                  quizData={quizData}
+                  onSubmit={handleQuizSubmit}
                 />
               </>
             ) : (
               <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg">
                 <h2 className="text-2xl font-bold text-green-800 mb-4">Quiz Submitted!</h2>
-                
+
                 {quizResults && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-center mb-6">
@@ -155,11 +178,11 @@ const StudentQuizView = () => {
                         </svg>
                       </div>
                     </div>
-                    
+
                     <p className="text-green-700 text-center text-lg font-medium">
                       You answered {quizResults.correctCount} out of {quizResults.totalQuestions} questions correctly.
                     </p>
-                    
+
                     <button
                       onClick={() => {
                         // Clear results and retake quiz
@@ -171,7 +194,7 @@ const StudentQuizView = () => {
                     >
                       Retake Quiz
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         // View detailed results
