@@ -86,6 +86,7 @@ export type EditQuizProps = {
     currentDescription: string;
     currentCourseCode: string;
     currentPublishedStatus: boolean;
+    currentCategoryId?: number;
 
     onClose: () => void;
     onSave: (updatedQuiz: {
@@ -93,6 +94,7 @@ export type EditQuizProps = {
         description: string;
         courseCode: string;
         publishedStatus: boolean;
+        categoryId: number;
     }) => void;
 };
 

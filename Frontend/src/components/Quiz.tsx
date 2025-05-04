@@ -228,6 +228,7 @@ const Quiz = () => {
           currentDescription={data.description}
           currentCourseCode={data.courseCode}
           currentPublishedStatus={data.publishedStatus || false}
+          currentCategoryId={data.category?.categoryId}
           onClose={() => setOpenEditQuiz(false)}
           onSave={handleSaveQuiz}
         />
