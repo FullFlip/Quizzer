@@ -1,15 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { QuizTypes } from '../Types';
+import QuizForm from './QuizForm';
 
 const StudentQuizView = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const [quizData, setQuizData] = useState<QuizTypes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [quizResults, setQuizResults] = useState<{
+    answers: Record<number, number>,
+    correctCount: number,
+    totalQuestions: number
+  } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchQuizDetails();
+    // Check if we have saved results for this quiz
+    const savedResults = localStorage.getItem(`quiz_results_${quizId}`);
+    if (savedResults) {
+      setQuizResults(JSON.parse(savedResults));
+      setIsSubmitted(true);
+    }
   }, [quizId]);
 
   const fetchQuizDetails = () => {
@@ -35,6 +48,36 @@ const StudentQuizView = () => {
 
   const handleBackClick = () => {
     navigate('/student');
+  };
+
+  const handleQuizSubmit = (answers: Record<number, number>) => {
+    // Calculate results
+    let correctCount = 0;
+    
+    if (quizData) {
+      quizData.questions.forEach(question => {
+        const selectedChoiceId = answers[question.id];
+        const selectedChoice = question.choices.find(c => c.choiceId === selectedChoiceId);
+        if (selectedChoice && selectedChoice.true) {
+          correctCount++;
+        }
+      });
+      
+      // Save results
+      const results = {
+        answers,
+        correctCount,
+        totalQuestions: quizData.questions.length
+      };
+      
+      // Save to localStorage or you could send to your backend API
+      localStorage.setItem(`quiz_results_${quizId}`, JSON.stringify(results));
+      
+      setQuizResults(results);
+      setIsSubmitted(true);
+    }
+    
+    console.log('Quiz submitted with answers:', answers);
   };
 
   if (isLoading) {
@@ -69,43 +112,79 @@ const StudentQuizView = () => {
               </div>
             </div>
             
-            <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-              <p className="text-yellow-800">
-                To take this quiz, please contact your teacher for instructions.
-              </p>
-            </div>
+            {!isSubmitted ? (
+              <>
+                <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
+                  <p className="text-blue-800">
+                    Select one answer for each question and click the "Check Answer" button to see if you're correct.
+                    When you've completed all questions, click "Submit Quiz".
+                  </p>
+                </div>
 
-            {/* Questions Section */}
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Questions</h2>
-              <div className="space-y-6">
-                {quizData.questions.map((question, qIndex) => (
-                  <div key={question.id} className="bg-white border border-gray-200 rounded-lg shadow-md p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        Question {qIndex + 1}: {question.title}
-                      </h3>
-                      <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                        {question.difficulty}
-                      </span>
+                {/* QuizForm Component */}
+                <QuizForm 
+                  quizData={quizData} 
+                  onSubmit={handleQuizSubmit} 
+                />
+              </>
+            ) : (
+              <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg">
+                <h2 className="text-2xl font-bold text-green-800 mb-4">Quiz Submitted!</h2>
+                
+                {quizResults && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="inline-flex items-center justify-center p-4 bg-white rounded-full shadow-lg">
+                        <svg className="w-10 h-10" viewBox="0 0 36 36">
+                          <path
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#E5E7EB"
+                            strokeWidth="3"
+                          />
+                          <path
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#10B981"
+                            strokeWidth="3"
+                            strokeDasharray={`${(quizResults.correctCount / quizResults.totalQuestions) * 100}, 100`}
+                          />
+                          <text x="18" y="20.5" textAnchor="middle" fill="#10B981" fontSize="10px" fontWeight="bold">
+                            {`${Math.round((quizResults.correctCount / quizResults.totalQuestions) * 100)}%`}
+                          </text>
+                        </svg>
+                      </div>
                     </div>
-                    <div className="mt-4">
-                      <h4 className="text-lg font-medium text-gray-700 mb-2">Choices:</h4>
-                      <ul className="space-y-2">
-                        {question.choices.map((choice) => (
-                          <li 
-                            key={choice.choiceId} 
-                            className="p-3 rounded-md bg-gray-50 border border-gray-200"
-                          >
-                            {choice.description}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    
+                    <p className="text-green-700 text-center text-lg font-medium">
+                      You answered {quizResults.correctCount} out of {quizResults.totalQuestions} questions correctly.
+                    </p>
+                    
+                    <button
+                      onClick={() => {
+                        // Clear results and retake quiz
+                        localStorage.removeItem(`quiz_results_${quizId}`);
+                        setQuizResults(null);
+                        setIsSubmitted(false);
+                      }}
+                      className="mt-4 w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                    >
+                      Retake Quiz
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        // View detailed results
+                        navigate(`/student/quiz/${quizId}/results`);
+                      }}
+                      className="mt-2 w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                    >
+                      View Detailed Results
+                    </button>
                   </div>
-                ))}
+                )}
               </div>
-            </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-10 text-gray-500">
