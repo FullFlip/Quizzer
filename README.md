@@ -21,6 +21,7 @@ direction LR
 class Category {
   +Long ID
   +String Name
+  +String Description
 }
 
 class Quiz {
