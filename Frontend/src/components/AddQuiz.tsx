@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { QuizFormData, AddQuizProps, Category } from "../Types";
+import React, { useEffect, useState } from 'react';
+import { AddQuizProps, Category, QuizFormData } from "../Types";
 
 const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls = true }) => {
     const [showAddForm, setShowAddForm] = useState(false);
@@ -18,7 +18,6 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
                 await fetch('http://localhost:8080/categories')
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data);
                         setCategories(data);
                     });
             } catch (error) {
