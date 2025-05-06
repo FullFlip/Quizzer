@@ -26,6 +26,7 @@ import com.haagahelia.quizzer.services.CategoryService;
 import com.haagahelia.quizzer.services.QuestionOperationService;
 import com.haagahelia.quizzer.services.QuizOperationService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -43,6 +44,11 @@ public class quizcontroller {
 
     @Autowired
     private AnswerService answerService;
+
+    @Operation(
+        summary = "Get all quizes by teacher",
+        description= "Fetch all quizes with a specific teacher id"
+    )
 
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
