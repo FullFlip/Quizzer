@@ -108,3 +108,4 @@ npm run dev
  ```
 9. Go to the link and enjoy
 
+10. For API documentation go to http://localhost:8080/swagger-ui/index.html  after sucesfully starting Spring Boot
