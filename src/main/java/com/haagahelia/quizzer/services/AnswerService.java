@@ -3,38 +3,56 @@ package com.haagahelia.quizzer.services;
 import com.haagahelia.quizzer.dto.AnswerDto;
 import com.haagahelia.quizzer.model.Answer;
 import com.haagahelia.quizzer.model.Question;
+import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.repositories.AnswerRepository;
 import com.haagahelia.quizzer.repositories.QuestionRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AnswerService {
 
-    private final AnswerRepository answerRepository;
-    private final QuestionRepository questionRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
 
-    public AnswerService(AnswerRepository answerRepository, QuestionRepository questionRepository) {
-        this.answerRepository = answerRepository;
-        this.questionRepository = questionRepository;
-    }
+    @Autowired
+    private QuestionRepository questionRepository;
 
-    // Add a new answer
     public void addAnswer(Long quizId, AnswerDto answerDto) {
+        Collection<Integer> idValues = answerDto.getAnswers().values();
 
         List<Question> questions = questionRepository.findAllByQuizId(quizId);
         for (Question question : questions) {
 
             Answer existingAnswer = answerRepository.findByQuestionId(question.getId());
 
-            if (existingAnswer != null) {
+            int correctCount = 0;
+            int wrongCount = 0;
 
+            for (Choice choice : question.getChoices()) {
+                if (choice.isTrue() && idValues.contains(choice.getChoiceId().intValue())) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            }
+
+            if (correctCount >= 1) {
+                wrongCount = 0;
+                correctCount = 1;
+            } else {
+                wrongCount = 1;
+                correctCount = 0;
+            }
+
+            if (existingAnswer != null) {
                 int totalAnswers = existingAnswer.getTotalAnswers() + 1;
-                int correctAnswers = existingAnswer.getCorrectAnswers() + answerDto.getCorrectCount();
-                int wrongAnswers = existingAnswer.getWrongAnswers()
-                        + (answerDto.getTotalQuestions() - answerDto.getCorrectCount());
+                int correctAnswers = existingAnswer.getCorrectAnswers() + correctCount;
+                int wrongAnswers = existingAnswer.getWrongAnswers() + wrongCount;
 
                 existingAnswer.setTotalAnswers(totalAnswers);
                 existingAnswer.setCorrectAnswers(correctAnswers);
@@ -42,12 +60,11 @@ public class AnswerService {
                 answerRepository.save(existingAnswer);
 
             } else {
-                // Create a new answer if none exists
                 Answer newAnswer = new Answer();
                 newAnswer.setQuestion(question);
                 newAnswer.setTotalAnswers(1);
-                newAnswer.setCorrectAnswers(answerDto.getCorrectCount());
-                newAnswer.setWrongAnswers(answerDto.getTotalQuestions() - answerDto.getCorrectCount());
+                newAnswer.setCorrectAnswers(correctCount);
+                newAnswer.setWrongAnswers(wrongCount);
                 answerRepository.save(newAnswer);
             }
         }
