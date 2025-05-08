@@ -39,7 +39,15 @@ const QuizByCategory = () => {
 
     return (
         <div className="flex flex-col p-4 min-h-screen bg-gray-100">
-            <h1 className="text-3xl font-bold mb-6">Quizzes in Category: {category}</h1>
+            <div className="flex items-center mb-6">
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mr-4"
+                    onClick={() => navigate('/student?tab=categories')}
+                >
+                    Return to Categories
+                </button>
+                <h1 className="text-3xl font-bold">Quizzes in Category: {category}</h1>
+            </div>
             <QuizCard quizzes={quizzes} handleQuizClick={handleQuizClick} />
         </div>
     );
