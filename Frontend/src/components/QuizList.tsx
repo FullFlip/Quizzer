@@ -201,7 +201,16 @@ const QuizList = () => {
                                         </div>
                                         <p className="font-medium">Added On: {quiz.publishedDate}</p>
                                     </div>
-                                    <div className="flex justify-end">
+                                    <div className="flex justify-end space-x-2">
+                                        <button
+                                            className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700"
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                navigate(`/reviews/${quiz.id}`, { state: { showAddReviewForm: false } });
+                                            }}
+                                        >
+                                            Show Reviews
+                                        </button>
                                         <button
                                             className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
                                             onClick={(event) => {

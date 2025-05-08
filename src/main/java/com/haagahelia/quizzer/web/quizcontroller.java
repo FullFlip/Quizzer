@@ -20,10 +20,12 @@ import com.haagahelia.quizzer.dto.QuizDto;
 import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
+import com.haagahelia.quizzer.model.Review;
 import com.haagahelia.quizzer.services.AnswerService;
 import com.haagahelia.quizzer.services.CategoryService;
 import com.haagahelia.quizzer.services.QuestionOperationService;
 import com.haagahelia.quizzer.services.QuizOperationService;
+import com.haagahelia.quizzer.services.ReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
@@ -44,6 +46,9 @@ public class quizcontroller {
     @Autowired
     private AnswerService answerService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     @Operation(summary = "Get all quizzes by teacher", description = "Fetch all quizzes with a specific teacher ID")
     @GetMapping("/quizzes")
     public List<Quiz> getAllQuizzes() {
@@ -60,6 +65,12 @@ public class quizcontroller {
     @GetMapping("/quizzes/{id}/questions")
     public Quiz getQuestionsForQuiz(@PathVariable Long id) {
         return quizOperationService.getQuizWithQuestions(id);
+    }
+
+    @Operation(summary = "Get a quiz by ID", description = "Fetch a specific quiz by its ID")
+    @GetMapping("/quiz/{id}")
+    public Quiz getQuizById(@PathVariable Long id) {
+        return quizOperationService.getQuizById(id);
     }
 
     @Operation(summary = "Get published quizzes", description = "Fetch all published quizzes")
@@ -158,5 +169,43 @@ public class quizcontroller {
         response.put("quizId", quizId.toString());
         answerService.addAnswer(quizId, answer);
         return response;
+    }
+
+    @Operation(summary = "Get all reviews", description = "Fetch all reviews")
+    @GetMapping("/reviews")
+    public List<Review> getAllReviews() {
+        return reviewService.getAllReviews();
+    }
+
+    @Operation(summary = "Get reviews by quiz ID", description = "Fetch all reviews for a specific quiz ID")
+    @GetMapping("/reviews/quiz/{quizId}")
+    public List<Review> getReviewsByQuizId(@PathVariable Long quizId) {
+        return reviewService.getReviewsByQuizId(quizId);
+    }
+
+    @Operation(summary = "Add a review", description = "Add a new review for a specific quiz")
+    @PostMapping("/reviews/quiz/{quizId}")
+    public Review addReview(@PathVariable Long quizId, @RequestBody Review review) {
+        if (review == null) {
+            throw new IllegalArgumentException("Invalid review data: comment and reviewValue are required.");
+        }
+        try {
+            return reviewService.addReview(quizId, review);
+        } catch (Exception e) {
+            System.err.println("Error adding review: " + e.getMessage());
+            throw new RuntimeException("Failed to add review. Please check the server logs for details.");
+        }
+    }
+
+    @Operation(summary = "Edit a review", description = "Update the details of an existing review by ID")
+    @PutMapping("/reviews/{reviewId}/quiz/{quizId}")
+    public Review editReview(@PathVariable Long reviewId, @PathVariable Long quizId, @RequestBody Review updatedReview) {
+        return reviewService.editReview(reviewId, quizId, updatedReview);
+    }
+
+    @Operation(summary = "Delete a review", description = "Delete a review by its ID")
+    @DeleteMapping("/reviews/{reviewId}")
+    public void deleteReview(@PathVariable Long reviewId) {
+        reviewService.deleteReview(reviewId);
     }
 }

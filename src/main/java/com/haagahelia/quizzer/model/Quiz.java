@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,7 +44,7 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
+    
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
@@ -52,6 +53,10 @@ public class Quiz {
     @JoinColumn(name = "category_id", nullable = true)
     //@JsonIgnoreProperties("quizzes")  // Replace @JsonBackReference with this
     private Category category;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("quiz") // Prevent infinite recursion
+    private List<Review> reviews;
 
     public Quiz() {
         super();
@@ -161,5 +166,13 @@ public class Quiz {
         categoryMap.put("title", category.getTitle());
         categoryMap.put("description", category.getDescription());
         return categoryMap;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

@@ -13,7 +13,12 @@ import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
 import com.haagahelia.quizzer.model.Teacher;
-import com.haagahelia.quizzer.repositories.*;
+import com.haagahelia.quizzer.repositories.CategoryRepository;
+import com.haagahelia.quizzer.repositories.ChoiceRepository;
+import com.haagahelia.quizzer.repositories.QuestionRepository;
+import com.haagahelia.quizzer.repositories.QuizRepository;
+import com.haagahelia.quizzer.repositories.TeacherRepository;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -57,6 +62,14 @@ public class QuizOperationService {
             throw new IllegalArgumentException("Quiz with id " + quizId + " could not be found");
         }
         return quiz;
+    }
+
+    public Quiz getQuizById(Long quizId) {
+        if (quizId == null) {
+            throw new IllegalArgumentException("Quiz ID is not provided or is invalid.");
+        }
+        return quizRepository.findById(quizId)
+                .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + quizId + " could not be found"));
     }
 
     public List<Quiz> getPublishedQuizzes() {

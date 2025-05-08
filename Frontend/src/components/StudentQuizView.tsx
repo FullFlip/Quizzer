@@ -183,27 +183,26 @@ const StudentQuizView = () => {
                       You answered {quizResults.correctCount} out of {quizResults.totalQuestions} questions correctly.
                     </p>
 
-                    <button
-                      onClick={() => {
-                        // Clear results and retake quiz
-                        localStorage.removeItem(`quiz_results_${quizId}`);
-                        setQuizResults(null);
-                        setIsSubmitted(false);
-                      }}
-                      className="mt-4 w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-                    >
-                      Retake Quiz
-                    </button>
+                    <div className="flex flex-col items-center gap-4">
+                      <button
+                        onClick={() => {
+                          // Clear results and retake quiz
+                          localStorage.removeItem(`quiz_results_${quizId}`);
+                          setQuizResults(null);
+                          setIsSubmitted(false);
+                        }}
+                        className="w-full max-w-sm py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                      >
+                        Retake Quiz
+                      </button>
 
-                    <button
-                      onClick={() => {
-                        // View detailed results
-                        navigate(`/results/${quizId}`);
-                      }}
-                      className="mt-2 w-full py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                    >
-                      View Detailed Results
-                    </button>
+                      <button
+                        onClick={() => navigate(`/reviews/${quizId}`)}
+                        className="w-full max-w-sm py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        View Detailed Results
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
