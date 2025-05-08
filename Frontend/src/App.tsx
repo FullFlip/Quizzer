@@ -5,6 +5,7 @@ import Quiz from './components/Quiz';
 import StudentView from './components/StudentView';
 import StudentQuizView from './components/StudentQuizView';
 import QuizByCategory from './components/QuizByCategory';
+import ResultsPage from './components/ResultsPage';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Route path="/student" element={<StudentView />} />
       <Route path="/student/quiz/:quizId" element={<StudentQuizView />} />
       <Route path="/quizzes/categories/:category" element={<QuizByCategory />} />
+      <Route path="/results/:quizId" element={<ResultsPage />} />
     </Routes>
   );
 };

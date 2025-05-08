@@ -52,6 +52,18 @@ export type QuestionProps = {
     };
 };
 
+export type Question = {
+    id: number;
+    title: string;
+    difficulty: string;
+    answers: {
+        id: number;
+        correctAnswers: number;
+        totalAnswers: number;
+        wrongAnswers: number;
+    }[];
+}
+
 export type QuizFormData = {
     title: string;
     description: string;

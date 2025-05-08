@@ -45,10 +45,7 @@ public class quizcontroller {
     @Autowired
     private AnswerService answerService;
 
-    @Operation(
-        summary = "Get all quizes by teacher",
-        description= "Fetch all quizes with a specific teacher id"
-    )
+    @Operation(summary = "Get all quizes by teacher", description = "Fetch all quizes with a specific teacher id")
 
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
@@ -58,6 +55,15 @@ public class quizcontroller {
     @GetMapping("/quizzes/{id}/questions")
     public Quiz getQuestionsForQuiz(@PathVariable Long id) {
         return quizOperationService.getQuizWithQuestions(id);
+    }
+
+    @GetMapping("/quizzes/{id}/only-questions")
+    public List<Question> getOnlyQuestionsForQuiz(@PathVariable Long id) {
+        Quiz quiz = quizOperationService.getQuizWithQuestions(id);
+        if (quiz != null) {
+            return quiz.getQuestions();
+        }
+        return List.of();
     }
 
     @GetMapping("/quizzes/published")
