@@ -125,4 +125,8 @@ public class QuizOperationService {
         }
         return quizRepository.findByCategory_Title(category);
     }
+
+    public List<Quiz> getAllQuizzes() {
+        return quizRepository.findAll();
+    }
 }

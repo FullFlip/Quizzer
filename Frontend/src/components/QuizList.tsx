@@ -23,11 +23,11 @@ const QuizList = () => {
     const [filteredData, setFilteredData] = useState<QuizTypes[]>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
-    const [activeTab, setActiveTab] = useState<'quizzes' | 'categories'>('quizzes'); // New state for tab selection
+    const [activeTab, setActiveTab] = useState<'quizzes' | 'categories'>('quizzes');
     const navigate = useNavigate();
 
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes/1", {
+        fetch("http://localhost:8080/quizzes", {
             method: "GET",
         })
             .then((response) => {

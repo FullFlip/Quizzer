@@ -45,6 +45,12 @@ public class quizcontroller {
     private AnswerService answerService;
 
     @Operation(summary = "Get all quizzes by teacher", description = "Fetch all quizzes with a specific teacher ID")
+    @GetMapping("/quizzes")
+    public List<Quiz> getAllQuizzes() {
+        return quizOperationService.getAllQuizzes();
+    }
+
+    @Operation(summary = "Get all quizzes by teacher", description = "Fetch all quizzes with a specific teacher ID")
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
         return quizOperationService.getAllQuizzesByTeacher(id);
