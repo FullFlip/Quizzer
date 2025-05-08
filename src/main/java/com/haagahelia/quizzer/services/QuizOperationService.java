@@ -19,7 +19,6 @@ import jakarta.transaction.Transactional;
 @Service
 public class QuizOperationService {
 
-
     @Autowired
     private TeacherService teacherService;
 
@@ -34,7 +33,7 @@ public class QuizOperationService {
 
     @Autowired
     private CategoryRepository categoryRepository;
-    
+
     @Autowired
     private TeacherRepository teacherRepository;
 
@@ -87,7 +86,8 @@ public class QuizOperationService {
         newQuiz.setPublishedDate(quiz.getPublishedDate());
 
         Teacher teacher = teacherRepository.findById(quiz.getTeacher().getTeacherId())
-                .orElseThrow(() -> new IllegalArgumentException("Teacher with id " + quiz.getTeacher().getTeacherId() + " could not be found"));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Teacher with id " + quiz.getTeacher().getTeacherId() + " could not be found"));
         newQuiz.setTeacher(teacher);
 
         return quizRepository.save(newQuiz);
@@ -123,7 +123,15 @@ public class QuizOperationService {
         if (category == null || category.isEmpty()) {
             throw new IllegalArgumentException("Category is not provided or is invalid.");
         }
-        return quizRepository.findByCategory_Title(category);
+
+        List<Quiz> publishedQuizzesByCategory = new ArrayList<>();
+        for (Quiz quiz : quizRepository.findByCategory_Title(category)) {
+            if (quiz.isPublishedStatus()) {
+                publishedQuizzesByCategory.add(quiz);
+            }
+        }
+
+        return publishedQuizzesByCategory;
     }
 
     public List<Quiz> getAllQuizzes() {
