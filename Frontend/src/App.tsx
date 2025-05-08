@@ -1,9 +1,14 @@
-import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Quiz from './components/Quiz';
-import QuizByCategory from './components/QuizByCategory';
+import { Routes, Route } from 'react-router-dom';
 import QuizList from './components/QuizList';
+import Quiz from './components/Quiz';
+import StudentView from './components/StudentView';
+import StudentQuizView from './components/StudentQuizView';
+import QuizByCategory from './components/QuizByCategory';
 import ResultsPage from './components/ResultsPage';
+import ReviewForQuiz from './components/ReviewForQuiz';
+
+const secretLink =import.meta.env.VITE_SECRET_LINK;
 
 const App = () => {
   return (
