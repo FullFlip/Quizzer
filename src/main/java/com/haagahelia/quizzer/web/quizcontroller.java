@@ -1,8 +1,8 @@
 package com.haagahelia.quizzer.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.haagahelia.quizzer.dto.AnswerDto;
 import com.haagahelia.quizzer.dto.QuizDto;
-import com.haagahelia.quizzer.model.Answer;
 import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
@@ -45,18 +44,25 @@ public class quizcontroller {
     @Autowired
     private AnswerService answerService;
 
-    @Operation(summary = "Get all quizes by teacher", description = "Fetch all quizes with a specific teacher id")
-
+    @Operation(summary = "Get all quizzes by teacher", description = "Fetch all quizzes with a specific teacher ID")
     @GetMapping("/quizzes/{id}")
     public List<Quiz> getAllQuizzesByTeacher(@PathVariable Long id) {
         return quizOperationService.getAllQuizzesByTeacher(id);
     }
 
+    @Operation(summary = "Get questions for a quiz", description = "Fetch all questions for a specific quiz ID")
     @GetMapping("/quizzes/{id}/questions")
     public Quiz getQuestionsForQuiz(@PathVariable Long id) {
         return quizOperationService.getQuizWithQuestions(id);
     }
 
+    @Operation(summary = "Get published quizzes", description = "Fetch all published quizzes")
+    @GetMapping("/quizzes/published")
+    public List<Quiz> getPublishedQuizzes() {
+        return quizOperationService.getPublishedQuizzes();
+    }
+
+    @Operation(summary = "Get the questions of the published questions", description = "Fetch all questions of published questions")
     @GetMapping("/quizzes/{id}/only-questions")
     public List<Question> getOnlyQuestionsForQuiz(@PathVariable Long id) {
         Quiz quiz = quizOperationService.getQuizWithQuestions(id);
@@ -66,26 +72,25 @@ public class quizcontroller {
         return List.of();
     }
 
-    @GetMapping("/quizzes/published")
-    public List<Quiz> getPublishedQuizzes() {
-        return quizOperationService.getPublishedQuizzes();
-    }
-
+    @Operation(summary = "Get quizzes by category", description = "Fetch all quizzes for a specific category")
     @GetMapping("/quizzes/categories/{category}")
     public List<Quiz> getQuizzesByCategory(@PathVariable String category) {
         return quizOperationService.getQuizzesByCategory(category);
     }
 
+    @Operation(summary = "Add a new quiz", description = "Create a new quiz with the provided details")
     @PostMapping("/quizzes")
     public Quiz addQuiz(@RequestBody QuizDto quiz) {
         return quizOperationService.addQuizDto(quiz);
     }
 
+    @Operation(summary = "Edit an existing quiz", description = "Update the details of an existing quiz by ID")
     @PutMapping("/quizzes/{id}")
     public Quiz editQuiz(@PathVariable Long id, @RequestBody Quiz updatedQuiz) {
         return quizOperationService.editQuiz(id, updatedQuiz);
     }
 
+    @Operation(summary = "Delete a quiz", description = "Delete a quiz by its ID")
     @Transactional
     @DeleteMapping("/quizzes/{id}")
     public void deleteQuiz(@PathVariable Long id) {
@@ -93,11 +98,13 @@ public class quizcontroller {
         System.out.println("Quiz with id " + id + " has been deleted.");
     }
 
+    @Operation(summary = "Add a question with choices", description = "Add a new question with choices to a specific quiz")
     @PostMapping("/questions-with-choices")
     public Question addQuestionWithChoices(@RequestBody Question question, @RequestHeader("quizId") Long quizId) {
         return questionOperationService.addQuestionWithChoices(question, quizId);
     }
 
+    @Operation(summary = "Delete a question", description = "Delete a question by its ID")
     @DeleteMapping("/question/{id}")
     public void deleteQuestionWithId(@PathVariable("id") Long questionId) {
         if (questionId == null) {
@@ -106,36 +113,38 @@ public class quizcontroller {
         questionOperationService.deleteQuestionWithId(questionId);
     }
 
+    @Operation(summary = "Update a question", description = "Update the details of a question by its ID")
     @PutMapping("/question/{id}")
     public void updateQuestionWithId(@PathVariable("id") Long questionId, @RequestBody Question question) {
-
         if (question == null) {
             throw new IllegalArgumentException("Provided question was null");
         }
-
         if (questionId == null) {
             throw new IllegalArgumentException("Invalid id");
         }
         questionOperationService.updateQuestion(questionId, question);
     }
 
-    // Get all categories
+    @Operation(summary = "Get all categories", description = "Fetch all available categories")
     @GetMapping("/categories")
     public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
+    @Operation(summary = "Add a new category", description = "Create a new category with the provided details")
     @PostMapping("/categories")
     public Category addCategory(@RequestBody Category category) {
         return categoryService.addCategory(category);
     }
 
+    @Operation(summary = "Delete a category", description = "Delete a category by its ID")
     @DeleteMapping("/categories/{id}")
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         System.out.println("Category with id " + id + " has been deleted.");
     }
 
+    @Operation(summary = "Submit answers for a quiz", description = "Submit answers for a specific quiz ID")
     @PostMapping("/answers/{quizId}")
     public Map<String, String> submitAnswer(@PathVariable Long quizId, @RequestBody AnswerDto answer) {
         Map<String, String> response = new HashMap<>();
