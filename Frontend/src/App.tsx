@@ -1,4 +1,4 @@
-import './App.css'
+import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import QuizList from './components/QuizList';
 import Quiz from './components/Quiz';
@@ -7,10 +7,12 @@ import StudentQuizView from './components/StudentQuizView';
 import QuizByCategory from './components/QuizByCategory';
 import ResultsPage from './components/ResultsPage';
 
+const secretLink =import.meta.env.VITE_SECRET_LINK;
+
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<QuizList />} />
+      <Route path={`/${secretLink}`} element={<QuizList />} />
       <Route path="/quiz/:quizId" element={<Quiz />} />
       <Route path="/student" element={<StudentView />} />
       <Route path="/student/quiz/:quizId" element={<StudentQuizView />} />

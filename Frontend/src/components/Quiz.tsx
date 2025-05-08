@@ -108,9 +108,10 @@ const Quiz = () => {
     setSelectedQuestion(question);
     setOpenAddQuestion(true);
   };
+  const secretLink =import.meta.env.VITE_SECRET_LINK;
 
   const handleHomeClick = () => {
-    navigate(`/`);
+    navigate(`/${secretLink}`);
   };
   return (
     <div className="bg-gray-100 min-h-screen p-6">

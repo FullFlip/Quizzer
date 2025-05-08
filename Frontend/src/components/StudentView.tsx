@@ -55,9 +55,10 @@ const StudentView = () => {
   const handleQuizClick = (quizId: number | undefined) => {
     navigate(`/student/quiz/${quizId}`);
   };
+  const secretLink =import.meta.env.VITE_SECRET_LINK;
 
   const handleSwitchToTeacherView = () => {
-    navigate('/');
+    navigate(`/${secretLink}`);
   };
 
   return (
