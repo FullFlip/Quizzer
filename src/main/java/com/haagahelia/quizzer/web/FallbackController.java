@@ -14,6 +14,7 @@ public class FallbackController {
         return "forward:/index.html";
     }
     
+    
     // Handle GET for one-level paths without a dot
     @GetMapping("/{path:[^\\.]+}")
     public String oneLevelFallback() {

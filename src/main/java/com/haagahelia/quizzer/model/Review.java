@@ -22,7 +22,7 @@ public class Review {
     private String comment;
 
     @Column(name = "review_value", nullable = false) // Updated column name
-    private int reviewValue; // Renamed field
+    private Integer reviewValue; // Renamed field and updated type
 
     @Column(name = "nickname", nullable = true) // New nullable field
     private String nickname;
@@ -36,7 +36,7 @@ public class Review {
         super();
     }
 
-    public Review(String comment, int reviewValue, String nickname, Quiz quiz) {
+    public Review(String comment, Integer reviewValue, String nickname, Quiz quiz) {
         this.comment = comment;
         this.reviewValue = reviewValue;
         this.nickname = nickname;
@@ -59,11 +59,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public int getReviewValue() { // Updated getter
+    public Integer getReviewValue() { // Updated getter
         return reviewValue;
     }
 
-    public void setReviewValue(int reviewValue) { // Updated setter
+    public void setReviewValue(Integer reviewValue) { // Updated setter
         if (reviewValue < 0 || reviewValue > 5) {
             throw new IllegalArgumentException("Review value must be between 0 and 5.");
         }

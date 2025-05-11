@@ -1,4 +1,5 @@
 export type QuizTypes = {
+    id: number; // Added 'id' property
     quizId?: number;
     title: string;
     description: string;
@@ -37,8 +38,12 @@ export type QuestionProps = {
     id: number;
     title: string;
     difficulty: string;
-    choices: never[];
-    quizId: string | undefined;
+    choices: {
+        choiceId: number;
+        description: string;
+        true: boolean;
+    }[]; // Updated 'choices' type to match the structure
+    quizId?: string; // Made 'quizId' optional
     handleAddQuestionClick?: (shouldClose: boolean) => void;
     questionToEdit?: {
         id: number;

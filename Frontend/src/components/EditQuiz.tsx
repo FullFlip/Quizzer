@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Category, EditQuizProps } from "../Types";
 
-const EditQuiz: React.FC<EditQuizProps> = ({
-  
-  currentTitle,
-  currentDescription,
-  currentCourseCode,
-  currentPublishedStatus,
-  onClose,
-  onSave,
-  currentCategoryId, 
+interface ExtendedEditQuizProps extends EditQuizProps {
+	quizId: string;
+	onClose: () => void;
+	onSave: (updatedQuiz: {
+		title: string;
+		description: string;
+		courseCode: string;
+		publishedStatus: boolean;
+		categoryId: number;
+	}) => void;
+}
+
+const EditQuiz: React.FC<ExtendedEditQuizProps> = ({
+	...existingProps // currentTitle, currentDescription, currentCourseCode, currentPublishedStatus, currentCategoryId, onClose, onSave
 }) => {
   const [quizData, setQuizData] = useState({
-    title: currentTitle,
-    description: currentDescription,
-    courseCode: currentCourseCode,
-    publishedStatus: currentPublishedStatus,
-    categoryId: currentCategoryId || 0,
+    title: existingProps.currentTitle,
+    description: existingProps.currentDescription,
+    courseCode: existingProps.currentCourseCode,
+    publishedStatus: existingProps.currentPublishedStatus,
+    categoryId: existingProps.currentCategoryId || 0,
     publishedDate: '',
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,48 +50,16 @@ const EditQuiz: React.FC<EditQuizProps> = ({
     }));
   };
 
-  const handleSaveQuiz = (updatedQuiz: {
-    title: string;
-    description: string;
-    courseCode: string;
-    publishedStatus: boolean;
-    categoryId: number;
-  }) => {
-    // Find the full category object by ID
-    const selectedCategory = categories.find(
-      (cat) => cat.categoryId === updatedQuiz.categoryId
-    );
-
-    fetch(`/quizzes/${quizId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...updatedQuiz,
-        publishedDate: quizData?.publishedDate || new Date().toISOString().split('T')[0],
-        category: selectedCategory || null, 
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((updatedData) => {
-        setQuizData(updatedData);
-        onClose();
-      })
-      .then(() => window.location.reload())
-      .catch((error) => {
-        console.error('Error updating quiz:', error);
-      });
-      
-  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSaveQuiz(quizData);
+    existingProps.onSave({
+      title: quizData.title,
+      description: quizData.description,
+      courseCode: quizData.courseCode,
+      publishedStatus: quizData.publishedStatus,
+      categoryId: quizData.categoryId
+    });
+    existingProps.onClose();
   };
 
   return (
@@ -182,7 +155,7 @@ const EditQuiz: React.FC<EditQuizProps> = ({
           <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
-              onClick={onClose}
+              onClick={existingProps.onClose}
               className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400"
             >
               Cancel

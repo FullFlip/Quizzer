@@ -15,10 +15,10 @@ const App = () => {
     <Routes>
       <Route path="/" element={<StudentView />} />
       <Route path={`/${secretLink}`} element={<QuizList />} />
-      <Route path="/quiz/:quizId" element={<Quiz />} />
+      <Route path="/selectedquiz/:quizId" element={<Quiz />} />
       <Route path="/student" element={<StudentView />} />
-      <Route path="/student/quiz/:quizId" element={<StudentQuizView />} />
-      <Route path="/quizzes/categories/:category" element={<QuizByCategory />} />
+      <Route path="/studentquiz/:quizId" element={<StudentQuizView />} />
+      <Route path="/quizzesbycategory/:category" element={<QuizByCategory />} />
       <Route path="/results/:quizId" element={<ResultsPage />} />
       <Route path="/reviews/:quizId" element={<ReviewForQuiz />} />
     </Routes>

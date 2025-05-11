@@ -68,15 +68,20 @@ const Review = () => {
     const handleSaveEdit = () => {
         if (!editingReview) return;
 
-        if (editingReview.reviewValue < 0 || editingReview.reviewValue > 5) {
-            alert("Rating must be between 0 and 5.");
+        // Ensure all required fields are present
+        if (!editingReview.comment || editingReview.reviewValue < 0 || editingReview.reviewValue > 5) {
+            alert("Please provide a valid comment and rating between 0 and 5.");
             return;
         }
 
         fetch(`/reviews/${editingReview.id}/quiz/${quizId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(editingReview),
+            body: JSON.stringify({
+                comment: editingReview.comment,
+                reviewValue: editingReview.reviewValue,
+                nickname: editingReview.nickname || "Anonymous", // Default to "Anonymous" if nickname is empty
+            }),
         })
             .then((response) => {
                 if (!response.ok) {

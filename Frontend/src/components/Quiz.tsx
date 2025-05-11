@@ -4,13 +4,11 @@ import { QuestionProps, QuizTypes } from '../Types';
 import AddEditQuestion from './AddEditQuestion';
 import EditQuiz from './EditQuiz';
 
-
 const Quiz = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const [data, setData] = useState<QuizTypes | undefined>(undefined);
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
-  const apiUrl = import.meta.env.VITE_API_URL || "";
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionProps | null>(null);
   const navigate = useNavigate();
 
@@ -38,9 +36,9 @@ const Quiz = () => {
     fetchData();
   }, [quizId]);
 
-  const handleAddQuestionClick = () => {
+  const handleAddQuestionClick = (isOpen: boolean) => {
     setSelectedQuestion(null);
-    setOpenAddQuestion(!openAddQuestion);
+    setOpenAddQuestion(isOpen);
   };
 
   const handleEditQuizClick = () => {
@@ -103,13 +101,13 @@ const Quiz = () => {
       .catch((error) => {
         console.error('Error deleting question:', error);
       });
-  }
+  };
 
   const handleEditQuestionClick = (question: QuestionProps) => {
     setSelectedQuestion(question);
     setOpenAddQuestion(true);
   };
-  const secretLink =import.meta.env.VITE_SECRET_LINK;
+  const secretLink = import.meta.env.VITE_SECRET_LINK;
 
   const handleHomeClick = () => {
     navigate(`/${secretLink}`);
@@ -163,7 +161,7 @@ const Quiz = () => {
 
         <div className='flex justify-between py-2'>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
-          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={handleAddQuestionClick}>Add question</button>
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={() => handleAddQuestionClick(true)}>Add question</button>
         </div>
         <ul className="space-y-4">
           {data?.questions.map((question) => (
@@ -177,7 +175,6 @@ const Quiz = () => {
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                     onClick={() => {
-                      //Type error, do not touch
                       handleEditQuestionClick(question)
                     }
                     }
@@ -217,11 +214,12 @@ const Quiz = () => {
 
       {openAddQuestion && (
         <AddEditQuestion
-          quizId={quizId}
+          quizId={quizId!}
           handleAddQuestionClick={handleAddQuestionClick}
-          questionToEdit={selectedQuestion || undefined} id={0} title={''} difficulty={''} choices={[]} />
+          questionToEdit={selectedQuestion || undefined}
+          onQuestionSaved={fetchData}
+        />
       )}
-
 
       {openEditQuiz && data && (
         <EditQuiz

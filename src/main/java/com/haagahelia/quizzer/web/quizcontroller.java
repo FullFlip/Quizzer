@@ -200,6 +200,12 @@ public class quizcontroller {
     @Operation(summary = "Edit a review", description = "Update the details of an existing review by ID")
     @PutMapping("/reviews/{reviewId}/quiz/{quizId}")
     public Review editReview(@PathVariable Long reviewId, @PathVariable Long quizId, @RequestBody Review updatedReview) {
+        if (updatedReview == null || updatedReview.getComment() == null || updatedReview.getReviewValue() == null) {
+            throw new IllegalArgumentException("Invalid review data: comment and reviewValue are required.");
+        }
+        if (updatedReview.getReviewValue() < 0 || updatedReview.getReviewValue() > 5) {
+            throw new IllegalArgumentException("Review value must be between 0 and 5.");
+        }
         return reviewService.editReview(reviewId, quizId, updatedReview);
     }
 

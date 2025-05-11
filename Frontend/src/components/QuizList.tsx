@@ -73,7 +73,7 @@ const QuizList = () => {
     }, [data, selectedCategoryId]);
 
     const handleQuizClick = (quizId: number) => {
-        navigate(`/quiz/${quizId}`);
+        navigate(`/selectedquiz/${quizId}`);
     };
 
     const handleAddQuiz = (quizToAdd: {
@@ -172,7 +172,7 @@ const QuizList = () => {
                                 />
                             </div>
                         )}
-                        <AddQuiz onAddQuiz={handleAddQuiz} />
+                        <AddQuiz onAddQuiz={handleAddQuiz} showFormControls={true} />
                         <div className="grid grid-cols-1 gap-6">
                             {filteredData.map((quiz) => (
                                 <div
@@ -202,6 +202,15 @@ const QuizList = () => {
                                         <p className="font-medium">Added On: {quiz.publishedDate}</p>
                                     </div>
                                     <div className="flex justify-end space-x-2">
+                                        <button
+                                            className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700"
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                navigate(`/results/${quiz.id}`);
+                                            }}
+                                        >
+                                            Show Results
+                                        </button>
                                         <button
                                             className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700"
                                             onClick={(event) => {

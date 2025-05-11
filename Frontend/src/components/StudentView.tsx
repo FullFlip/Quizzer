@@ -53,8 +53,10 @@ const StudentView = () => {
   };
 
   const handleQuizClick = (quizId: number | undefined) => {
-    navigate(`/student/quiz/${quizId}`);
+    navigate(`/studentquiz/${quizId}`);
   };
+
+  
   const secretLink =import.meta.env.VITE_SECRET_LINK;
 
   const handleSwitchToTeacherView = () => {
@@ -117,7 +119,7 @@ const StudentView = () => {
                 >
                   <h2
                     className="text-xl w-2/6 font-semibold mb-2 text-blue-600 hover:underline cursor-pointer"
-                    onClick={() => navigate(`/quizzes/categories/${category.title}`)}
+                    onClick={() => navigate(`/quizzesbycategory/${category.title}`)}
                   >
                     {category.title}
                   </h2>

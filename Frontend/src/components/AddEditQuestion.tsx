@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { QuestionProps } from "../Types";
 import AddChoice from "./AddChoice";
 
-const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: QuestionProps) => {
+// Updated interface and removed unused variable
+interface ExtendedQuestionProps {
+    quizId: string;
+    handleAddQuestionClick: (isOpen: boolean) => void;
+    onQuestionSaved: () => void;
+    questionToEdit?: QuestionProps;
+}
+
+const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit, onQuestionSaved }: ExtendedQuestionProps) => {
     const [questionData, setQuestionData] = useState({
         quiz: {
             id: quizId,
@@ -24,8 +32,6 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
                 { id: 2, answer: "", isCorrect: false },
             ]
     );
-
-    const apiUrl = import.meta.env.VITE_API_URL || "";
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuestionData({ ...questionData, title: event.target.value });
@@ -51,8 +57,6 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
     };
 
     const toggleIsCorrect = (id: number) => {
-        console.log(id);
-
         const updatedChoices = choices.map((choice) =>
             choice.id === id ? { ...choice, isCorrect: !choice.isCorrect } : choice
         );
@@ -75,14 +79,36 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
     }, [choices]);
 
     const saveQuestion = () => {
-        console.log(questionData);
+        if (!questionData.title.trim()) {
+            window.alert("The question title cannot be empty.");
+            return;
+        }
+
+        // Validation for choices
+        if (choices.length < 2) {
+            window.alert("A question must have at least 2 choices.");
+            return;
+        }
+
+        for (const choice of choices) {
+            if (!choice.answer.trim()) {
+                window.alert("All choices must have a description.");
+                return;
+            }
+        }
+
+        const hasCorrectChoice = choices.some((choice) => choice.isCorrect);
+        if (!hasCorrectChoice) {
+            window.alert("At least one choice must be marked as correct.");
+            return;
+        }
 
         const url = questionToEdit
             ? `/question/${questionToEdit.id}`
             : "/questions-with-choices";
 
         const method = questionToEdit ? "PUT" : "POST";
-        const alertMessage = questionToEdit ? "Question modified successfully" : "Question added successfully"
+        const alertMessage = questionToEdit ? "Question modified successfully" : "Question added successfully";
         fetch(url, {
             method,
             headers: {
@@ -92,12 +118,20 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
             body: JSON.stringify(questionData),
         })
             .then((response) => {
-                if (response.ok) {
-                    console.log(response);
-                    window.alert(alertMessage)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                // Use text() so parsing is safe even if body is empty.
+                return response.text();
             })
-            .then(() => window.location.reload());
+            .then(() => {
+                window.alert(alertMessage);
+                onQuestionSaved(); // trigger data update in parent component
+                handleAddQuestionClick(false);
+            })
+            .catch((error) => {
+                console.error('Error saving question:', error);
+            });
     };
 
     return (
@@ -161,16 +195,14 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
                 <div className="flex justify-between">
                     <button
                         className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                        onClick={() => handleAddQuestionClick?.(false)}
+                        onClick={() => handleAddQuestionClick(false)}
                     >
                         Close
                     </button>
 
                     <button
                         className="bg-emerald-400 text-white px-4 py-2 rounded-lg hover:bg-emerald-600"
-                        onClick={() => {
-                            saveQuestion();
-                        }}
+                        onClick={saveQuestion}
                     >
                         {questionToEdit ? "Save Changes" : "Add"}
                     </button>

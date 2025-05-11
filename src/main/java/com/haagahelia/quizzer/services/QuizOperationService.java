@@ -13,10 +13,12 @@ import com.haagahelia.quizzer.model.Choice;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Quiz;
 import com.haagahelia.quizzer.model.Teacher;
+import com.haagahelia.quizzer.repositories.AnswerRepository;
 import com.haagahelia.quizzer.repositories.CategoryRepository;
 import com.haagahelia.quizzer.repositories.ChoiceRepository;
 import com.haagahelia.quizzer.repositories.QuestionRepository;
 import com.haagahelia.quizzer.repositories.QuizRepository;
+import com.haagahelia.quizzer.repositories.ReviewRepository;
 import com.haagahelia.quizzer.repositories.TeacherRepository;
 
 import jakarta.transaction.Transactional;
@@ -41,6 +43,12 @@ public class QuizOperationService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     public List<Quiz> getAllQuizzesByTeacher(Long teacherId) {
         if (teacherId == null) {
@@ -122,13 +130,27 @@ public class QuizOperationService {
     public void deleteQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("Quiz with id " + quizId + " could not be found"));
+
+        // Delete associated reviews
+        if (quiz.getReviews() != null && !quiz.getReviews().isEmpty()) {
+            reviewRepository.deleteAllInBatch(quiz.getReviews());
+        }
+
+        // Delete associated answers for each question
         List<Question> questions = quiz.getQuestions();
         List<Choice> choices = new ArrayList<>();
         for (Question question : questions) {
+            if (question.getAnswers() != null && !question.getAnswers().isEmpty()) {
+                answerRepository.deleteAllInBatch(question.getAnswers());
+            }
             choices.addAll(question.getChoices());
         }
+
+        // Delete choices and questions
         choiceRepository.deleteAllInBatch(choices);
         questionRepository.deleteAllInBatch(questions);
+
+        // Finally, delete the quiz
         quizRepository.deleteQuizById(quizId);
     }
 

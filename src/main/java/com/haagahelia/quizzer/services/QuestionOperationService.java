@@ -57,14 +57,18 @@ public class QuestionOperationService {
                 .orElseThrow(
                         () -> new IllegalArgumentException("Question with id " + questionId + " could not be found"));
 
+        // Update question details
         existingQuestion.setTitle(updatedQuestion.getTitle());
         existingQuestion.setDifficulty(updatedQuestion.getDifficulty());
 
+        // Clear existing choices and add new ones
         existingQuestion.getChoices().clear();
         for (Choice updatedChoice : updatedQuestion.getChoices()) {
-            updatedChoice.setQuestion(existingQuestion); 
+            updatedChoice.setChoiceId(null); // Ensure new choices are treated as new entities
+            updatedChoice.setQuestion(existingQuestion);
             existingQuestion.getChoices().add(updatedChoice);
         }
+
         questionRepository.save(existingQuestion);
     }
 }
