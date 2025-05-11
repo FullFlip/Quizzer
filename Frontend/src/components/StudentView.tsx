@@ -20,7 +20,7 @@ const StudentView = () => {
 
   const fetchPublishedQuizzes = () => {
     setIsLoading(true);
-    fetch("http://localhost:8080/quizzes/published", {
+    fetch("/quizzes/published", {
       method: "GET",
     })
       .then((response) => {
@@ -40,7 +40,7 @@ const StudentView = () => {
   };
 
   const fetchCategories = () => {
-    fetch("http://localhost:8080/categories", {
+    fetch("/categories", {
       method: "GET",
     }).then((response) => {
       if (!response.ok) {

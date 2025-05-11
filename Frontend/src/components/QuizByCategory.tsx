@@ -10,7 +10,7 @@ const QuizByCategory = () => {
 
 
     const fetchQuizzesByCategory = () => {
-        fetch(`http://localhost:8080/quizzes/categories/${category}`, {
+        fetch(`/quizzes/categories/${category}`, {
             method: "GET",
         })
             .then((response) => {

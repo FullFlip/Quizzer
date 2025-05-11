@@ -17,7 +17,7 @@ const Categories = ({ onCategorySelect, selectedCategoryId }: CategoriesProps) =
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
 
     const fetchCategories = () => {
-        fetch(`http://localhost:8080/categories`, {
+        fetch(`/categories`, {
             method: "GET",
         })
             .then((response) => {
@@ -50,7 +50,7 @@ const Categories = ({ onCategorySelect, selectedCategoryId }: CategoriesProps) =
             return;
         }
 
-        fetch("http://localhost:8080/categories", {
+        fetch("/categories", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json", // Explicitly set without charset
@@ -82,7 +82,7 @@ const Categories = ({ onCategorySelect, selectedCategoryId }: CategoriesProps) =
             return; // Exit if the user cancels
         }
 
-        fetch(`http://localhost:8080/categories/${categoryId}`, {
+        fetch(`/categories/${categoryId}`, {
             method: "DELETE",
         })
             .then((response) => {

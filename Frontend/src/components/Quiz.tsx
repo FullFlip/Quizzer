@@ -15,7 +15,7 @@ const Quiz = () => {
   const navigate = useNavigate();
 
   const fetchData = () => {
-    fetch(`${apiUrl}/quizzes/${quizId}/questions`, {
+    fetch(`/quizzes/${quizId}/questions`, {
       method: 'GET',
     })
       .then((response) => {
@@ -53,7 +53,7 @@ const Quiz = () => {
     courseCode: string;
     publishedStatus: boolean;
   }) => {
-    fetch(`${apiUrl}/quizzes/${quizId}`, {
+    fetch(`/quizzes/${quizId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const Quiz = () => {
       return;
     }
 
-    fetch(`http://localhost:8080/question/${questionId}`, {
+    fetch(`/question/${questionId}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     })

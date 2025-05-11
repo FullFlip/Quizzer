@@ -78,8 +78,8 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit }: Que
         console.log(questionData);
 
         const url = questionToEdit
-            ? `http://localhost:8080/question/${questionToEdit.id}`
-            : "http://localhost:8080/questions-with-choices";
+            ? `/question/${questionToEdit.id}`
+            : "/questions-with-choices";
 
         const method = questionToEdit ? "PUT" : "POST";
         const alertMessage = questionToEdit ? "Question modified successfully" : "Question added successfully"

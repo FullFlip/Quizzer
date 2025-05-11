@@ -27,7 +27,7 @@ const QuizList = () => {
     const navigate = useNavigate();
 
     const fetchData = () => {
-        fetch("http://localhost:8080/quizzes", {
+        fetch("/quizzes", {
             method: "GET",
         })
             .then((response) => {
@@ -46,7 +46,7 @@ const QuizList = () => {
     };
 
     const handleDelete = (quizId: number) => {
-        fetch(`${apiUrl}/quizzes/${quizId}`, {
+        fetch(`/quizzes/${quizId}`, {
             method: "DELETE",
         })
             .then((response) => {
@@ -85,7 +85,7 @@ const QuizList = () => {
         categoryId: number;
         teacher: { teacherId: number };
     }) => {
-        fetch(`${apiUrl}/quizzes`, {
+        fetch("/quizzes", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

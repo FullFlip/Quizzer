@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { EditQuizProps, Category } from "../Types";
+import React, { useEffect, useState } from 'react';
+import { Category, EditQuizProps } from "../Types";
 
 const EditQuiz: React.FC<EditQuizProps> = ({
   
@@ -22,7 +22,7 @@ const EditQuiz: React.FC<EditQuizProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/categories')
+    fetch('/categories')
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Error fetching categories: ", error));
@@ -57,7 +57,7 @@ const EditQuiz: React.FC<EditQuizProps> = ({
       (cat) => cat.categoryId === updatedQuiz.categoryId
     );
 
-    fetch(`http://localhost:8080/quizzes/${quizId}`, {
+    fetch(`/quizzes/${quizId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

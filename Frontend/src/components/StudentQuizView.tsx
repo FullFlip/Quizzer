@@ -27,7 +27,7 @@ const StudentQuizView = () => {
 
   const fetchQuizDetails = () => {
     setIsLoading(true);
-    fetch(`http://localhost:8080/quizzes/${quizId}/questions`, {
+    fetch(`/quizzes/${quizId}/questions`, {
       method: 'GET',
     })
       .then((response) => {
@@ -76,7 +76,7 @@ const StudentQuizView = () => {
       console.log(results);
       
       // Submit answers to the backend
-      fetch(`http://localhost:8080/answers/${quizId}`, {
+      fetch(`/answers/${quizId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

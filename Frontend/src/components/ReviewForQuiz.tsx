@@ -29,13 +29,13 @@ const Review = () => {
 
     useEffect(() => {
         // Fetch quiz details
-        fetch(`http://localhost:8080/quiz/${quizId}`)
+        fetch(`/quiz/${quizId}`)
             .then((response) => response.json())
             .then((data) => setQuiz(data))
             .catch((error) => console.error("Error fetching quiz details:", error));
 
         // Fetch reviews for the quiz
-        fetch(`http://localhost:8080/reviews/quiz/${quizId}`)
+        fetch(`/reviews/quiz/${quizId}`)
             .then((response) => response.json())
             .then((data) => setReviews(data))
             .catch((error) => console.error("Error fetching reviews:", error));
@@ -46,7 +46,7 @@ const Review = () => {
             alert("Rating must be between 0 and 5.");
             return;
         }
-        fetch(`http://localhost:8080/reviews/quiz/${quizId}`, {
+        fetch(`/reviews/quiz/${quizId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newReview),
@@ -73,7 +73,7 @@ const Review = () => {
             return;
         }
 
-        fetch(`http://localhost:8080/reviews/${editingReview.id}/quiz/${quizId}`, {
+        fetch(`/reviews/${editingReview.id}/quiz/${quizId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(editingReview),
@@ -101,7 +101,7 @@ const Review = () => {
         }
 
 
-        fetch(`http://localhost:8080/reviews/${reviewId}`, { method: "DELETE" })
+        fetch(`/reviews/${reviewId}`, { method: "DELETE" })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

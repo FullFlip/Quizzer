@@ -7,7 +7,7 @@ const ResultsPage = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
 
     const fetchData = () => {
-        fetch(`http://localhost:8080/quizzes/${quizId}/only-questions`)
+        fetch(`/quizzes/${quizId}/only-questions`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);

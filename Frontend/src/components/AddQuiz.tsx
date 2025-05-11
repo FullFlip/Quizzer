@@ -15,7 +15,7 @@ const AddQuiz: React.FC<AddQuizProps> = ({ onAddQuiz, onCancel, showFormControls
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                await fetch('http://localhost:8080/categories')
+                await fetch('/categories')
                     .then((response) => response.json())
                     .then((data) => {
                         setCategories(data);
