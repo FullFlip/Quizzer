@@ -1,25 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import AddQuestion from './AddQuestion';
+import { useNavigate, useParams } from 'react-router-dom';
+import { QuestionProps, QuizTypes } from '../Types';
+import AddEditQuestion from './AddEditQuestion';
 import EditQuiz from './EditQuiz';
 
-type QuizTypes = {
-  quizId?: number;
-  title: string;
-  description: string;
-  courseCode: string;
-  publishedStatus?: boolean;
-  publishedDate?: string;
-  questions: {
-    id: number;
-    title: string;
-    difficulty: string;
-    choices: {
-      description: string;
-      true: boolean;
-    }[];
-  }[];
-};
 
 const Quiz = () => {
   const { quizId } = useParams<{ quizId: string }>();
@@ -27,6 +11,8 @@ const Quiz = () => {
   const [openAddQuestion, setOpenAddQuestion] = useState(false);
   const [openEditQuiz, setOpenEditQuiz] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL || "";
+  const [selectedQuestion, setSelectedQuestion] = useState<QuestionProps | null>(null);
+  const navigate = useNavigate();
 
   const fetchData = () => {
     fetch(`${apiUrl}/quizzes/${quizId}/questions`, {
@@ -39,6 +25,8 @@ const Quiz = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
+
         setData(data);
       })
       .catch((error) => {
@@ -51,6 +39,7 @@ const Quiz = () => {
   }, [quizId]);
 
   const handleAddQuestionClick = () => {
+    setSelectedQuestion(null);
     setOpenAddQuestion(!openAddQuestion);
   };
 
@@ -62,6 +51,7 @@ const Quiz = () => {
     title: string;
     description: string;
     courseCode: string;
+    publishedStatus: boolean;
   }) => {
     fetch(`${apiUrl}/quizzes/${quizId}`, {
       method: 'PUT',
@@ -70,7 +60,6 @@ const Quiz = () => {
       },
       body: JSON.stringify({
         ...updatedQuiz,
-        publishedStatus: data?.publishedStatus || false,
         publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
       }),
     })
@@ -89,19 +78,62 @@ const Quiz = () => {
       });
   };
 
+  const handleDeleteQuestion = (questionId: number) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this question?");
+    if (!confirmDelete) {
+      return;
+    }
+
+    fetch(`http://localhost:8080/question/${questionId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setData((prevData) => {
+          if (!prevData) return prevData;
+          return {
+            ...prevData,
+            questions: prevData.questions.filter((question) => question.id !== questionId),
+          };
+        });
+      })
+      .catch((error) => {
+        console.error('Error deleting question:', error);
+      });
+  }
+
+  const handleEditQuestionClick = (question: QuestionProps) => {
+    setSelectedQuestion(question);
+    setOpenAddQuestion(true);
+  };
+  const secretLink =import.meta.env.VITE_SECRET_LINK;
+
+  const handleHomeClick = () => {
+    navigate(`/${secretLink}`);
+  };
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={handleHomeClick}
+            className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+          >
+            Back to Home
+          </button>
           <h1 className="text-3xl font-bold text-gray-800">Quiz Details</h1>
-          <button 
+          <button
             onClick={handleEditQuizClick}
             className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600"
           >
             Edit Quiz
           </button>
         </div>
-        
+
+
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Quiz ID:</span> {quizId}
         </p>
@@ -111,9 +143,24 @@ const Quiz = () => {
         <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Title:</span> {data?.title}
         </p>
-        <p className="text-lg text-gray-600 mb-6">
+        <p className="text-lg text-gray-600 mb-2">
           <span className="font-semibold">Description:</span> {data?.description}
         </p>
+        {data?.category && (
+          <p className="text-lg text-gray-600 mb-2">
+            <span className="font-semibold">Category:</span> {data.category.title}
+          </p>
+        )}
+        <div className="text-lg text-gray-600 mb-6 flex items-center">
+          <span className="font-semibold mr-2">Status:</span>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${data?.publishedStatus ? "bg-green-500 text-white" : "bg-red-500 text-white"
+              }`}
+          >
+            {data?.publishedStatus ? "Published" : "Not Published"}
+          </span>
+        </div>
+
         <div className='flex justify-between py-2'>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Questions</h2>
           <button className='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600' onClick={handleAddQuestionClick}>Add question</button>
@@ -124,13 +171,26 @@ const Quiz = () => {
               key={question.id}
               className="border border-gray-300 rounded-lg p-4 bg-gray-50 shadow-sm"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between mb-2">
                 <p className="text-lg font-medium text-gray-800">{question.title}</p>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Edit
-                </button>
+                <div className='flex flex-col gap-4'>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    onClick={() => {
+                      //Type error, do not touch
+                      handleEditQuestionClick(question)
+                    }
+                    }
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                    onClick={() => handleDeleteQuestion(question.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
               <p className="text-sm text-gray-600 mb-2">
                 <span className="font-semibold">Difficulty:</span> {question.difficulty}
@@ -154,16 +214,23 @@ const Quiz = () => {
           ))}
         </ul>
       </div>
-      
-      {openAddQuestion && (<AddQuestion quizId={quizId} handleAddQuestionClick={handleAddQuestionClick} />)}
 
-      
+      {openAddQuestion && (
+        <AddEditQuestion
+          quizId={quizId}
+          handleAddQuestionClick={handleAddQuestionClick}
+          questionToEdit={selectedQuestion || undefined} id={0} title={''} difficulty={''} choices={[]} />
+      )}
+
+
       {openEditQuiz && data && (
         <EditQuiz
           quizId={quizId || ''}
           currentTitle={data.title}
           currentDescription={data.description}
           currentCourseCode={data.courseCode}
+          currentPublishedStatus={data.publishedStatus || false}
+          currentCategoryId={data.category?.categoryId}
           onClose={() => setOpenEditQuiz(false)}
           onSave={handleSaveQuiz}
         />

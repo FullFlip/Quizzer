@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -22,6 +23,7 @@ public class Choice {
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
     public Choice(boolean isTrue, String description) {
@@ -31,6 +33,10 @@ public class Choice {
 
     public Choice() {
         super();
+    }
+
+    public Long getChoiceId() {
+        return choiceId;
     }
 
     public boolean isTrue() {
@@ -49,8 +55,6 @@ public class Choice {
         this.description = description;
     }
 
-   
-
     public void setQuestion(Question question) {
         this.question = question;
     }
@@ -58,6 +62,10 @@ public class Choice {
     @Override
     public String toString() {
         return "Choice [choiceId=" + choiceId + ", isTrue=" + isTrue + ", description=" + description + "]";
+    }
+
+    public void setChoiceId(Long choiceId) {
+        this.choiceId = choiceId;
     }
 
 }

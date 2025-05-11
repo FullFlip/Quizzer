@@ -1,7 +1,12 @@
 package com.haagahelia.quizzer.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,7 +33,7 @@ public class Quiz {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "code", nullable = false, updatable = false)
+    @Column(name = "code", nullable = false)
     private String courseCode;
 
     @Column(name = "published_status", nullable = false)
@@ -39,10 +44,19 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
+    
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = true)
+    //@JsonIgnoreProperties("quizzes")  // Replace @JsonBackReference with this
+    private Category category;
+
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("quiz") // Prevent infinite recursion
+    private List<Review> reviews;
 
     public Quiz() {
         super();
@@ -127,5 +141,38 @@ public class Quiz {
 
     public void setQuizId(Long quizId) {
         this.quizId = quizId;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return this.category;
+    }
+
+    @JsonProperty("categoryId")
+    public Long getCategoryIdForJson() {
+        return category != null ? category.getCategoryId() : null;
+    }
+
+    @JsonProperty("category")
+    public Map<String, Object> getCategoryForJson() {
+        if (category == null) {
+            return null;
+        }
+        Map<String, Object> categoryMap = new HashMap<>();
+        categoryMap.put("categoryId", category.getCategoryId());
+        categoryMap.put("title", category.getTitle());
+        categoryMap.put("description", category.getDescription());
+        return categoryMap;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

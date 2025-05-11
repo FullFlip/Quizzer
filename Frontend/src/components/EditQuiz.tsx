@@ -1,45 +1,92 @@
-import React, { useState } from 'react';
-
-type EditQuizProps = {
-  quizId: string;
-  currentTitle: string;
-  currentDescription: string;
-  currentCourseCode: string;
-  onClose: () => void;
-  onSave: (updatedQuiz: {
-    title: string;
-    description: string;
-    courseCode: string;
-  }) => void;
-};
+import React, { useState, useEffect } from 'react';
+import { EditQuizProps, Category } from "../Types";
 
 const EditQuiz: React.FC<EditQuizProps> = ({
   
   currentTitle,
   currentDescription,
   currentCourseCode,
+  currentPublishedStatus,
   onClose,
-  onSave
+  onSave,
+  currentCategoryId, 
 }) => {
   const [quizData, setQuizData] = useState({
     title: currentTitle,
     description: currentDescription,
-    courseCode: currentCourseCode
+    courseCode: currentCourseCode,
+    publishedStatus: currentPublishedStatus,
+    categoryId: currentCategoryId || 0,
+    publishedDate: '',
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/categories')
+      .then((response) => response.json())
+      .then((data) => setCategories(data))
+      .catch((error) => console.error("Error fetching categories: ", error));
+  }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setQuizData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === "categoryId" ? Number(value) : value
     }));
   };
 
+  const handleToggleChange = () => {
+    setQuizData(prev => ({
+      ...prev,
+      publishedStatus: !prev.publishedStatus
+    }));
+  };
+
+  const handleSaveQuiz = (updatedQuiz: {
+    title: string;
+    description: string;
+    courseCode: string;
+    publishedStatus: boolean;
+    categoryId: number;
+  }) => {
+    // Find the full category object by ID
+    const selectedCategory = categories.find(
+      (cat) => cat.categoryId === updatedQuiz.categoryId
+    );
+
+    fetch(`http://localhost:8080/quizzes/${quizId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...updatedQuiz,
+        publishedDate: quizData?.publishedDate || new Date().toISOString().split('T')[0],
+        category: selectedCategory || null, 
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((updatedData) => {
+        setQuizData(updatedData);
+        onClose();
+      })
+      .then(() => window.location.reload())
+      .catch((error) => {
+        console.error('Error updating quiz:', error);
+      });
+      
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(quizData);
+    handleSaveQuiz(quizData);
   };
 
   return (
@@ -90,6 +137,46 @@ const EditQuiz: React.FC<EditQuizProps> = ({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+          </div>
+
+          <div>
+            <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
+            <select
+              id="categoryId"
+              name="categoryId"
+              value={quizData.categoryId}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.categoryId} value={category.categoryId}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="flex items-center">
+            <label htmlFor="publishedStatus" className="flex items-center cursor-pointer">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="publishedStatus"
+                  className="sr-only"
+                  checked={quizData.publishedStatus}
+                  onChange={handleToggleChange}
+                />
+                <div className={`block w-14 h-8 rounded-full ${quizData.publishedStatus ? 'bg-green-600' : 'bg-gray-400'}`}></div>
+                <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${quizData.publishedStatus ? 'transform translate-x-6' : ''}`}></div>
+              </div>
+              <span className="ml-3 font-medium text-gray-700">
+                {quizData.publishedStatus ? 'Published' : 'Not Published'}
+              </span>
+            </label>
           </div>
           
           <div className="flex justify-end space-x-3 pt-4">
