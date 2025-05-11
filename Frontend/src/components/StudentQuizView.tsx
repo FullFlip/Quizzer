@@ -197,10 +197,17 @@ const StudentQuizView = () => {
                       </button>
 
                       <button
-                        onClick={() => navigate(`/reviews/${quizId}`)}
+                        onClick={() => navigate(`/results/${quizId}`)}
                         className="w-full max-w-sm py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                       >
                         View Detailed Results
+                      </button>
+
+                      <button
+                        onClick={() => navigate(`/reviews/${quizId}`)}
+                        className="w-full max-w-sm py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        View or leave reviews
                       </button>
                     </div>
                   </div>

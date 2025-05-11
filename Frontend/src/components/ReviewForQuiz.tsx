@@ -6,8 +6,6 @@ const Review = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Debugging: Log location.state to verify the passed state
-    console.log("Location state:", location.state);
 
     // Explicitly check for undefined and ensure the state is correctly interpreted
     const showAddReviewForm = location.state?.showAddReviewForm ?? true;
@@ -125,6 +123,11 @@ const Review = () => {
                 <div className="mb-6 text-center">
                     <h1 className="text-3xl font-bold mb-2">Reviews of {quiz.title}</h1>
                     <p className="text-gray-700">{quiz.description}</p>
+                    <p className="text-gray-700">
+                        {reviews.length > 0
+                            ? `${(reviews.reduce((sum, review) => sum + review.reviewValue, 0) / reviews.length).toFixed(1)} rating average based on ${reviews.length} reviews`
+                            : "No reviews yet"}
+                    </p>
                 </div>
             )}
             {showAddReviewForm && (
@@ -191,6 +194,7 @@ const Review = () => {
                             className="border border-gray-300 p-2 rounded w-full mb-2"
                         />
                         <select
+                            title="Rating"
                             value={editingReview.reviewValue}
                             onChange={(e) =>
                                 setEditingReview({ ...editingReview, reviewValue: +e.target.value })
