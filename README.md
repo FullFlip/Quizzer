@@ -47,33 +47,35 @@ Major Libraries used in the Frontend:
 
 # Data diagram
 ```mermaid
+---
+config:
+  look: neo
+  theme: neo
+  layout: elk
+---
 classDiagram
-
+direction LR
 class Answer {
       +Long id
       +int totalAnswers
       +int correctAnswers
       +int wrongAnswers
   }
-  
   class Category {
       +Long categoryId
       +String title
       +String description
   }
-  
   class Choice {
       +Long choiceId
       +boolean isTrue
       +String description
   }
-  
   class Question {
       +Long questionId
       +String title
       +String difficulty
   }
-  
   class Quiz {
       +Long quizId
       +String title
@@ -82,29 +84,23 @@ class Answer {
       +boolean publishedStatus
       +LocalDate publishedDate
   }
-  
   class Review {
       +Long id
       +String comment
       +int reviewValue
       +String nickname
   }
-  
   class Teacher {
       +Long teacherId
       +String name
       +String role
   }
-  
   Question "1" --> "0..*" Choice : has
   Question "1" --> "0..*" Answer : has
   Quiz "1" --> "0..*" Question : contains
   Category "1" --> "0..*" Quiz : categorizes
   Teacher "1" --> "0..*" Quiz : creates
   Quiz "1" --> "0..*" Review : receives
-
-
-
 ```
 # Instructions
 ## Basic setup
