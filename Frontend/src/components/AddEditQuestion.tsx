@@ -57,9 +57,17 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit, onQue
     };
 
     const toggleIsCorrect = (id: number) => {
-        const updatedChoices = choices.map((choice) =>
-            choice.id === id ? { ...choice, isCorrect: !choice.isCorrect } : choice
-        );
+        const updatedChoices = choices.map((choice) => {
+            // If this is the choice being clicked
+            if (choice.id === id) {
+                // Toggle it on (if it was false) or do nothing if it's already true
+                // This prevents having no correct answer at all
+                return { ...choice, isCorrect: true };
+            } else {
+                // All other choices must be set to false
+                return { ...choice, isCorrect: false };
+            }
+        });
         setChoices(updatedChoices);
     };
 
@@ -102,6 +110,13 @@ const AddEditQuestion = ({ handleAddQuestionClick, quizId, questionToEdit, onQue
             window.alert("At least one choice must be marked as correct.");
             return;
         }
+        const correctChoiceCount = choices.filter(choice => choice.isCorrect).length;
+        if (correctChoiceCount !== 1) {
+            window.alert("Exactly one choice must be marked as correct.");
+            return;
+        }
+
+
 
         const url = questionToEdit
             ? `/question/${questionToEdit.id}`
