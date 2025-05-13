@@ -48,7 +48,6 @@ Major Libraries used in the Frontend:
 # Data diagram
 ```mermaid
 classDiagram
-direction LR
 
 class Answer {
       +Long id
@@ -100,7 +99,7 @@ class Answer {
   Question "1" --> "0..*" Choice : has
   Question "1" --> "0..*" Answer : has
   Quiz "1" --> "0..*" Question : contains
-  Category "0..1" --> "0..*" Quiz : categorizes
+  Category "1" --> "0..*" Quiz : categorizes
   Teacher "1" --> "0..*" Quiz : creates
   Quiz "1" --> "0..*" Review : receives
 
