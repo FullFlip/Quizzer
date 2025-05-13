@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { QuestionProps, QuizTypes } from '../Types';
+import { Category, QuestionProps, QuizTypes } from '../Types';
 import AddEditQuestion from './AddEditQuestion';
 import EditQuiz from './EditQuiz';
 
@@ -48,10 +48,8 @@ const Quiz = () => {
     description: string;
     courseCode: string;
     publishedStatus: boolean;
-    categoryId: number;
+    category: Category;
   }) => {
-    
-    
     fetch(`/quizzes/${quizId}`, {
       method: 'PUT',
       headers: {
@@ -63,7 +61,7 @@ const Quiz = () => {
         courseCode: updatedQuiz.courseCode,
         publishedStatus: updatedQuiz.publishedStatus,
         publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
-        categoryId: updatedQuiz.categoryId // Send categoryId directly, not nested in a category object
+        category: updatedQuiz.category
       }),
     })
       .then((response) => {
@@ -73,7 +71,6 @@ const Quiz = () => {
         return response.json();
       })
       .then((updatedData) => {
-        
         setData(updatedData);
         setOpenEditQuiz(false);
       })

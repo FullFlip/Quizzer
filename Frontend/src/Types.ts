@@ -111,7 +111,7 @@ export type EditQuizProps = {
         description: string;
         courseCode: string;
         publishedStatus: boolean;
-        categoryId: number;
+        category: Category;
     }) => void;
 };
 

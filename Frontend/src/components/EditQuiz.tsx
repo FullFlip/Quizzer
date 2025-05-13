@@ -9,7 +9,7 @@ interface ExtendedEditQuizProps extends EditQuizProps {
 		description: string;
 		courseCode: string;
 		publishedStatus: boolean;
-		categoryId: number;
+		category: Category;
 	}) => void;
 }
 
@@ -52,12 +52,21 @@ const EditQuiz: React.FC<ExtendedEditQuizProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Find the selected category from the categories array
+    const selectedCategory = categories.find(c => c.categoryId === quizData.categoryId);
+    
+    if (!selectedCategory) {
+      alert("Please select a valid category");
+      return;
+    }
+    
     existingProps.onSave({
       title: quizData.title,
       description: quizData.description,
       courseCode: quizData.courseCode,
       publishedStatus: quizData.publishedStatus,
-      categoryId: quizData.categoryId
+      category: selectedCategory
     });
     existingProps.onClose();
   };
