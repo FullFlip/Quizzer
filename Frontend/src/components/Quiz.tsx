@@ -23,8 +23,6 @@ const Quiz = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-
         setData(data);
       })
       .catch((error) => {
@@ -52,6 +50,8 @@ const Quiz = () => {
     publishedStatus: boolean;
     categoryId: number;
   }) => {
+    
+    
     fetch(`/quizzes/${quizId}`, {
       method: 'PUT',
       headers: {
@@ -63,7 +63,7 @@ const Quiz = () => {
         courseCode: updatedQuiz.courseCode,
         publishedStatus: updatedQuiz.publishedStatus,
         publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
-        category: { categoryId: updatedQuiz.categoryId } // Properly structure category object
+        categoryId: updatedQuiz.categoryId // Send categoryId directly, not nested in a category object
       }),
     })
       .then((response) => {
@@ -73,6 +73,7 @@ const Quiz = () => {
         return response.json();
       })
       .then((updatedData) => {
+        
         setData(updatedData);
         setOpenEditQuiz(false);
       })
