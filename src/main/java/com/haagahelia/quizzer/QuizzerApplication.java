@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import com.haagahelia.quizzer.model.Category;
 import com.haagahelia.quizzer.model.Choice;
@@ -23,7 +24,9 @@ public class QuizzerApplication {
         SpringApplication.run(QuizzerApplication.class, args);
     }
 
+    // Only load demo data if NOT running with 'test' profile
     @Bean
+    @Profile("!test")
     public CommandLineRunner demo(TeacherService teacherService, CategoryService categoryService,
             QuizOperationService quizOperationService) {
         return (args) -> {
