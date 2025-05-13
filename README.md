@@ -47,14 +47,9 @@ Major Libraries used in the Frontend:
 
 # Data diagram
 ```mermaid
----
-config:
-  look: neo
-  theme: neo
-  layout: elk
----
+
 classDiagram
-direction LR
+
 class Answer {
       +Long id
       +int totalAnswers
