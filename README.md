@@ -1,3 +1,20 @@
+# Heroku Deployment Information
+
+## Single Deployment Setup
+This branch is configured for Heroku single deployment, where the frontend is built and served through the backend's static folder. This approach simplifies deployment by requiring only one Heroku dyno instead of separate deployments for frontend and backend.
+
+## Teacher Access
+The application uses a "secret link" approach to access the teacher view:
+
+- The secret link is defined in the `Frontend/.env` file as `VITE_SECRET_LINK`
+- To access the teacher view, navigate to `http://localhost:5173/{secret-link}`
+- In a production environment, you should:
+  - Keep this link confidential
+  - Change the value from the default
+  - Ensure `.env` is in your `.gitignore` (it's already included but kept in the repo for demonstration)
+
+> ⚠️ **Security Note**: For a real production application, this should be replaced with proper authentication. The secret link approach is used here for demonstration purposes only.
+
 # Description
 Working as a four man team in a project called Quizzer. The project lasts six weeks so three two week Sprints. In releases there is a release for each Sprint. 
 
@@ -62,8 +79,15 @@ class Answer {
   +String description
 }
 
+class Review {
+  +String comment
+  +Integer reviewValue
+  +String nickname
+}
+
 Category "0..1" -- "0..*" Quiz
 Quiz     "1"    -- "0..*" Question
+Quiz     "1"    -- "0..*" Review
 Question "1"    -- "1..*" Choice
 Choice   "1"    -- "0..*" Answer
 
