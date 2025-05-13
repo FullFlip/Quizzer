@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -169,12 +171,19 @@ public class quizcontroller {
 
     @Operation(summary = "Submit answers for a quiz", description = "Submit answers for a specific quiz ID")
     @PostMapping("/answers/{quizId}")
-    public Map<String, String> submitAnswer(@PathVariable Long quizId, @RequestBody AnswerDto answer) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Answers submitted successfully.");
-        response.put("quizId", quizId.toString());
-        answerService.addAnswer(quizId, answer);
-        return response;
+    public ResponseEntity<?> submitAnswer(@PathVariable Long quizId, @RequestBody AnswerDto answer) {
+        try {
+            answerService.addAnswer(quizId, answer);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Answers submitted successfully.");
+            response.put("quizId", quizId.toString());
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred while processing the answer: " + e.getMessage());
+        }
     }
 
     @Operation(summary = "Get all reviews", description = "Fetch all reviews")

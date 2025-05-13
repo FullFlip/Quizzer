@@ -23,6 +23,11 @@ public class AnswerService {
     private QuestionRepository questionRepository;
 
     public void addAnswer(Long quizId, AnswerDto answerDto) {
+        // Validate input
+        if (answerDto == null || answerDto.getAnswers() == null || answerDto.getAnswers().isEmpty()) {
+            throw new IllegalArgumentException("Answer data is invalid or missing answer options");
+        }
+
         Collection<Integer> idValues = answerDto.getAnswers().values();
 
         List<Question> questions = questionRepository.findAllByQuizId(quizId);
