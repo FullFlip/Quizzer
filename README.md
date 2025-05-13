@@ -50,46 +50,61 @@ Major Libraries used in the Frontend:
 classDiagram
 direction LR
 
-class Category {
-  +Long ID
-  +String Name
-  +String Description
-}
-
-class Quiz {
-  +String title
-  +String description
-  +String courseCode
-  +Boolean publishedStatus
-  +List~Question~ questions
-}
-
-class Question {
-  +String title
-  +Integer difficulty
-  +List~Choice~ choices
-}
-
-class Choice {
-  +Boolean isTrue
-  +String description
-}
-
 class Answer {
-  +String description
-}
+      +Long id
+      +int totalAnswers
+      +int correctAnswers
+      +int wrongAnswers
+  }
+  
+  class Category {
+      +Long categoryId
+      +String title
+      +String description
+  }
+  
+  class Choice {
+      +Long choiceId
+      +boolean isTrue
+      +String description
+  }
+  
+  class Question {
+      +Long questionId
+      +String title
+      +String difficulty
+  }
+  
+  class Quiz {
+      +Long quizId
+      +String title
+      +String description
+      +String courseCode
+      +boolean publishedStatus
+      +LocalDate publishedDate
+  }
+  
+  class Review {
+      +Long id
+      +String comment
+      +int reviewValue
+      +String nickname
+  }
+  
+  class Teacher {
+      +Long teacherId
+      +String name
+      +String role
+  }
+  
+  Question "1" --> "0..*" Choice : has
+  Question "1" --> "0..*" Answer : has
+  Quiz "1" --> "0..*" Question : contains
+  Category "0..1" --> "0..*" Quiz : categorizes
+  Teacher "1" --> "0..*" Quiz : creates
+  Quiz "1" --> "0..*" Review : receives
 
-class Review {
-  +String comment
-  +Integer reviewValue
-  +String nickname
-}
 
-Category "0..1" -- "0..*" Quiz
-Quiz     "1"    -- "0..*" Question
-Quiz     "1"    -- "0..*" Review
-Question "1"    -- "1..*" Choice
-Choice   "1"    -- "0..*" Answer
 
 ```
 # Instructions
