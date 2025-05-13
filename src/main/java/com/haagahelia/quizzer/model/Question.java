@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty; 
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -97,6 +98,7 @@ public class Question {
                 + choices + "]";
     }
 
+    @JsonProperty("id") // Added this annotation to work with AnswerCreateEndpointTests
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }

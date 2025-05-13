@@ -160,6 +160,12 @@ public class quizcontroller {
         categoryService.deleteCategory(id);
         System.out.println("Category with id " + id + " has been deleted.");
     }
+//added this method to work with createAnswerSavesAnswerForPublishedQuiz
+    @Operation(summary = "Get all answers", description = "Fetch all answers")
+    @GetMapping("/answers")
+    public List<com.haagahelia.quizzer.model.Answer> getAllAnswers() {
+        return answerService.getAllAnswers();
+    }
 
     @Operation(summary = "Submit answers for a quiz", description = "Submit answers for a specific quiz ID")
     @PostMapping("/answers/{quizId}")

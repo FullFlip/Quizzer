@@ -70,6 +70,10 @@ public class AnswerService {
         }
     }
 
+    public List<Answer> getAllAnswers() { // New method to work with createAnswerSavesAnswerForPublishedQuiz
+        return answerRepository.findAll();
+    }
+
     public Answer getAllAnswersByQuestionId(Long questionId) {
         return answerRepository.findByQuestionId(questionId);
     }

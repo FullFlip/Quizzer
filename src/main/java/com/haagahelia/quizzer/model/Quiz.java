@@ -87,6 +87,11 @@ public class Quiz {
         return quizId;
     }
 
+    @JsonProperty("id") // Added this annotation to work with createAnswerSavesAnswerForPublishedQuiz
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -148,10 +153,6 @@ public class Quiz {
         return "Quiz [quizId=" + quizId + ", title=" + title + ", description=" + description + ", courseCode="
                 + courseCode + ", publishedStatus=" + publishedStatus + ", publishedDate=" + publishedDate
                 + ", questions=" + questions + ", teacher=" + teacher + "]";
-    }
-
-    public void setQuizId(Long quizId) {
-        this.quizId = quizId;
     }
 
     public void setCategory(Category category) {
