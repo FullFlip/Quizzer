@@ -90,7 +90,15 @@ const QuizList = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(quizToAdd),
+            body: JSON.stringify({
+                title: quizToAdd.title,
+                description: quizToAdd.description,
+                courseCode: quizToAdd.courseCode,
+                publishedStatus: quizToAdd.publishedStatus,
+                publishedDate: quizToAdd.publishedDate,
+                categoryId: quizToAdd.categoryId, // Keep the original categoryId for the DTO
+                teacher: quizToAdd.teacher
+            }),
         })
             .then((response) => {
                 if (!response.ok) {

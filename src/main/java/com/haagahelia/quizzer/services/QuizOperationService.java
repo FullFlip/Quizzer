@@ -96,14 +96,16 @@ public class QuizOperationService {
             throw new IllegalArgumentException("Quiz data is not provided or is invalid.");
         }
         Optional<Category> category = categoryRepository.findById(quiz.getCategoryId());
+        if (category.isEmpty()) {
+            throw new IllegalArgumentException("Category with id " + quiz.getCategoryId() + " could not be found");
+        }
 
         Quiz newQuiz = new Quiz();
         newQuiz.setTitle(quiz.getTitle());
         newQuiz.setDescription(quiz.getDescription());
         newQuiz.setCourseCode(quiz.getCourseCode());
-        newQuiz.setCategory(category.orElse(null));
+        newQuiz.setCategory(category.get());
         newQuiz.setPublishedStatus(quiz.isPublishedStatus());
-
         newQuiz.setPublishedDate(quiz.getPublishedDate());
 
         Teacher teacher = teacherRepository.findById(quiz.getTeacher().getTeacherId())
@@ -122,7 +124,11 @@ public class QuizOperationService {
         existingQuiz.setCourseCode(updatedQuiz.getCourseCode());
         existingQuiz.setPublishedStatus(updatedQuiz.isPublishedStatus());
         existingQuiz.setPublishedDate(updatedQuiz.getPublishedDate());
-        existingQuiz.setCategory(updatedQuiz.getCategory());
+        if (updatedQuiz.getCategory() != null && updatedQuiz.getCategory().getCategoryId() != null) {
+            Category category = categoryRepository.findById(updatedQuiz.getCategory().getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category with id " + updatedQuiz.getCategory().getCategoryId() + " could not be found"));
+            existingQuiz.setCategory(category);
+        }
         return quizRepository.save(existingQuiz);
     }
 

@@ -50,6 +50,7 @@ const Quiz = () => {
     description: string;
     courseCode: string;
     publishedStatus: boolean;
+    categoryId: number;
   }) => {
     fetch(`/quizzes/${quizId}`, {
       method: 'PUT',
@@ -57,8 +58,12 @@ const Quiz = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...updatedQuiz,
+        title: updatedQuiz.title,
+        description: updatedQuiz.description,
+        courseCode: updatedQuiz.courseCode,
+        publishedStatus: updatedQuiz.publishedStatus,
         publishedDate: data?.publishedDate || new Date().toISOString().split('T')[0],
+        category: { categoryId: updatedQuiz.categoryId } // Properly structure category object
       }),
     })
       .then((response) => {
