@@ -12,12 +12,33 @@ Quizzer is a full-stack web application for creating, managing, and taking quizz
 # Backlog
 [Link to the Backlog](https://github.com/orgs/FullFlip/projects/1)
 
+# Heroku deployment (as single deployment)
+
+[![Heroku App Status](https://img.shields.io/badge/heroku-deployed-success?logo=heroku)](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/)
+
+## Access Information
+
+### Student View
+- **URL**: [https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/)
+- Default landing page accessible to all users
+
+### Teacher View
+- **URL**: [https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/secure-access-12345](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/secure-access-12345)
+- Access to quiz and category management.
+
+> ⚠️ **Note**: In a production environment, you should change the secret access token and implement proper authentication. This simplified access method is for demonstration purposes only.
+
+## Deployment Architecture
+- **Single Dyno**: Frontend and backend combined in one deployment
+- **Database**: PostgreSQL provided by Heroku
+- **Environment**: Configuration managed through Heroku Config Vars
+
 # Technologies used in this project
 ## Backend
 - Programming Language: Java ( 17 ) 
 - Framework: Spring boot
 - In development H2 Database
-- In production xx
+- In production Heroku Postgres/ PostgreSQL
 ## Frontend
 - Programming Language: TypeScript
 - Framework: React
