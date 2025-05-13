@@ -120,3 +120,14 @@ npm run dev
 9. Go to the link and enjoy
 
 10. For API documentation go to http://localhost:8080/swagger-ui/index.html  after sucesfully starting Spring Boot
+
+11. To run tests either go to Testing tab on VScode (if that's ur IDE) or run them on your console.
+Make sure you are in the root,
+If on cmd use
+ ```
+  mvwn test
+ ```
+Or if on Powershell\Linux use
+ ```
+./mvwn test  or .\mvwn test
+ ```
