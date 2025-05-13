@@ -49,7 +49,7 @@ public class quizcontroller {
     @Autowired
     private ReviewService reviewService;
 
-    @Operation(summary = "Get all quizzes by teacher", description = "Fetch all quizzes with a specific teacher ID")
+    @Operation(summary = "Get all quizzes", description = "Fetch all quizzes")
     @GetMapping("/quizzes")
     public List<Quiz> getAllQuizzes() {
         return quizOperationService.getAllQuizzes();

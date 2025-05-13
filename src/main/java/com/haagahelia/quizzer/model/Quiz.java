@@ -71,6 +71,17 @@ public class Quiz {
         this.publishedDate = LocalDate.now();
         this.questions = questions;
     }
+  
+    public Quiz(String title, String description, String courseCode, boolean publishedStatus,
+            List<Question> questions, Teacher teacher) {
+        this.title = title;
+        this.description = description;
+        this.courseCode = courseCode;
+        this.publishedStatus = publishedStatus;
+        this.publishedDate = LocalDate.now();
+        this.questions = questions;
+        this.teacher = teacher;
+    }
 
     public Long getId() {
         return quizId;
