@@ -57,12 +57,7 @@ const StudentView = () => {
   };
 
   
-  const secretLink =import.meta.env.VITE_SECRET_LINK;
-
-  const handleSwitchToTeacherView = () => {
-    navigate(`/${secretLink}`);
-  };
-
+ 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
       <div className="w-full flex justify-center mb-6">
@@ -85,15 +80,8 @@ const StudentView = () => {
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
         {activeTab === 'quizzes' && (
           <>
-            <div className="flex justify-between items-center mb-6">
               <h1 className="text-4xl font-bold text-gray-800">Available Quizzes</h1>
-              <button
-                onClick={handleSwitchToTeacherView}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
-              >
-                Switch to Teacher View
-              </button>
-            </div>
+              
 
             {isLoading ? (
               <div className="flex justify-center p-10">
