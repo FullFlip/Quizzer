@@ -3,6 +3,20 @@
 ## Single Deployment Setup
 This branch is configured for Heroku single deployment, where the frontend is built and served through the backend's static folder. This approach simplifies deployment by requiring only one Heroku dyno instead of separate deployments for frontend and backend.
 
+## Access Information
+[![Heroku App Status](https://img.shields.io/badge/heroku-deployed-success?logo=heroku)](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/)
+
+### Student View
+- **URL**: [https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/)
+- Default landing page accessible to all users
+
+### Teacher View
+- **URL**: [https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/secure-access-12345](https://fullflip-quizzer-b5ec0e5d6a2f.herokuapp.com/secure-access-12345)
+- Access to quiz and category management.
+- secret link used in project: secure-access-12345
+> ⚠️ **Note**: In a production environment, you should change the secret access token and implement proper authentication. This simplified access method is for demonstration purposes only.
+
+
 ## Teacher Access
 The application uses a "secret link" approach to access the teacher view:
 
