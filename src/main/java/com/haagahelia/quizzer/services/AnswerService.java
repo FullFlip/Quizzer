@@ -4,8 +4,10 @@ import com.haagahelia.quizzer.dto.AnswerDto;
 import com.haagahelia.quizzer.model.Answer;
 import com.haagahelia.quizzer.model.Question;
 import com.haagahelia.quizzer.model.Choice;
+import com.haagahelia.quizzer.model.Quiz;
 import com.haagahelia.quizzer.repositories.AnswerRepository;
 import com.haagahelia.quizzer.repositories.QuestionRepository;
+import com.haagahelia.quizzer.repositories.QuizRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,34 @@ public class AnswerService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private QuizRepository quizRepository;
+
     public void addAnswer(Long quizId, AnswerDto answerDto) {
         // Validate input
         if (answerDto == null || answerDto.getAnswers() == null || answerDto.getAnswers().isEmpty()) {
             throw new IllegalArgumentException("Answer data is invalid or missing answer options");
         }
 
+        // Fetch the quiz and check published status
+        Quiz quiz = quizRepository.findById(quizId)
+            .orElseThrow(() -> new IllegalArgumentException("Quiz not found"));
+        if (!quiz.isPublishedStatus()) {
+            throw new IllegalArgumentException("Cannot submit answers for a non-published quiz");
+        }
+
         Collection<Integer> idValues = answerDto.getAnswers().values();
 
         List<Question> questions = questionRepository.findAllByQuizId(quizId);
         for (Question question : questions) {
+            // Validate that the answer option exists for this question
+            for (Integer answerOptionId : idValues) {
+                boolean exists = question.getChoices().stream()
+                    .anyMatch(choice -> choice.getChoiceId().intValue() == answerOptionId);
+                if (!exists) {
+                    throw new IllegalArgumentException("Invalid answer option ID: " + answerOptionId);
+                }
+            }
 
             Answer existingAnswer = answerRepository.findByQuestionId(question.getId());
 
