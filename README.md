@@ -3,6 +3,9 @@ Working as a four man team in a project called Quizzer. The project lasts six we
 
 Quizzer is a full-stack web application for creating, managing, and taking quizzes. It features a React + TypeScript frontend with Tailwind CSS for styling, and a Java Spring Boot backend with a REST API and H2 database. Teachers can create, edit, categorize, and publish quizzes, while students can browse and complete published quizzes by category.
 
+# License
+Quizzer is [MIT licensed](./LICENSE).
+
 # Team members
 * [Jarno Ryhänen](https://github.com/JarnoRyhanen)
 * [Matti Pohjanoksa](https://github.com/MatPohj)
